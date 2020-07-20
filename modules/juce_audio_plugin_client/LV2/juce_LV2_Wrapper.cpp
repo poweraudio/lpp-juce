@@ -859,7 +859,7 @@ public:
 
         if (filter->hasEditor())
         {
-            editor = filter->createEditorIfNeeded();
+            editor = std::unique_ptr<AudioProcessorEditor>(filter->createEditorIfNeeded());
 
             if (editor == nullptr)
             {
