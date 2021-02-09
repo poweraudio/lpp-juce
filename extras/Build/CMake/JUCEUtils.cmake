@@ -1307,7 +1307,8 @@ function(_juce_set_plugin_target_properties shared_code_target kind)
             XCODE_ATTRIBUTE_GENERATE_PKGINFO_FILE YES)
 
         _juce_create_windows_package(${shared_code_target} ${target_name} lv2 "" x86-win x86_64-win)
-        
+
+        set(output_path "${products_folder}/${product_name}.lv2")
 
         if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
             # On linux we assume that the output arch is the same as the that of the host platform
@@ -1319,24 +1320,24 @@ function(_juce_set_plugin_target_properties shared_code_target kind)
                 LIBRARY_OUTPUT_DIRECTORY "${output_path}")
         endif()
 
-        set(output_path "${products_folder}/${product_name}.lv2")
+
 
         # generate .ttl files
-        if (LV2_TTL_GENERATOR)
-        add_custom_command(TARGET ${target_name} POST_BUILD
-            COMMAND ${LV2_TTL_GENERATOR} "./${product_name}.so"
-            WORKING_DIRECTORY "${products_folder}/${product_name}.lv2/"
-            VERBATIM)
+        if(LV2_TTL_GENERATOR)
+            add_custom_command(TARGET ${target_name} POST_BUILD
+                COMMAND ${LV2_TTL_GENERATOR} "./${product_name}.so"
+                WORKING_DIRECTORY "${products_folder}/${product_name}.lv2/"
+                VERBATIM)
         else()
-        add_executable(lv2_ttl_generator ${JUCE_SOURCE_DIR}/extras/Build/lv2_ttl_generator/lv2_ttl_generator.c)
-        target_link_libraries(lv2_ttl_generator dl)
-        add_custom_command(TARGET ${target_name} POST_BUILD
-            COMMAND lv2_ttl_generator "${output_path}/${shared_code_target}.so"
-            DEPENDS ${target_name} lv2_ttl_generator
-            WORKING_DIRECTORY "${products_folder}/${product_name}.lv2/"
-            VERBATIM)
+            add_executable(lv2_ttl_generator ${JUCE_SOURCE_DIR}/extras/Build/lv2_ttl_generator/lv2_ttl_generator.c)
+            target_link_libraries(lv2_ttl_generator dl)
+            add_custom_command(TARGET ${target_name} POST_BUILD
+                COMMAND lv2_ttl_generator "${output_path}/${shared_code_target}.so"
+                DEPENDS ${target_name} lv2_ttl_generator
+                WORKING_DIRECTORY "${products_folder}/${product_name}.lv2/"
+                VERBATIM)
         endif()
-        
+
         _juce_copy_after_build(${shared_code_target} ${target_name} "${output_path}" JUCE_LV2_COPY_DIR)
 
     elseif(kind STREQUAL "VST")
