@@ -1499,10 +1499,11 @@ private:
     #endif
 
     bool textRecursionCheck = false;
-    std::unordered_set<String> paramIDs;
+    std::unordered_set<String> paramIDs, groupIDs;
    #endif
 
     void checkForDuplicateParamID (AudioProcessorParameter*);
+    void checkForDuplicateGroupIDs (const AudioProcessorParameterGroup&);
 
     AudioProcessorListener* getListenerLocked (int) const noexcept;
     void updateSpeakerFormatStrings();
