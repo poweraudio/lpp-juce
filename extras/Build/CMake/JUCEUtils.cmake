@@ -1368,11 +1368,18 @@ function(_juce_set_plugin_target_properties shared_code_target kind)
         endif()
 
 
-
-        # generate .ttl files
+       # LV2 tools dont work with a space in the .so file
+       set(lv2_shared_lib_property "$<TARGET_PROPERTY:${shared_code_target},JUCE_LV2_SHARED_LIBRARY_NAME>")
+       set(lv2_shared_lib $<IF:$<BOOL:${lv2_shared_lib_property}>,${lv2_shared_lib_property},${product_name}> )
+        add_custom_command(TARGET ${target_name} POST_BUILD
+         COMMAND cmake -E rename ${product_name}.so ${lv2_shared_lib}.so
+          WORKING_DIRECTORY "${products_folder}/${product_name}.lv2/"
+          VERBATIM)
+       
+       # generate .ttl files
         if(LV2_TTL_GENERATOR)
             add_custom_command(TARGET ${target_name} POST_BUILD
-                COMMAND ${LV2_TTL_GENERATOR} "./${product_name}.so"
+                COMMAND ${LV2_TTL_GENERATOR} "./${lv2_shared_lib}.so"
                 WORKING_DIRECTORY "${products_folder}/${product_name}.lv2/"
                 VERBATIM)
         else()
@@ -1380,7 +1387,7 @@ function(_juce_set_plugin_target_properties shared_code_target kind)
             set_source_files_properties(${JUCE_SOURCE_DIR}/extras/Build/lv2_ttl_generator/lv2_ttl_generator.c PROPERTIES LANGUAGE CXX)
             target_link_libraries(${target_name}_lv2_ttl_generator dl)
             add_custom_command(TARGET ${target_name} POST_BUILD
-                COMMAND ${target_name}_lv2_ttl_generator "./${product_name}.so"
+                COMMAND ${target_name}_lv2_ttl_generator "./${lv2_shared_lib}.so"
                 DEPENDS ${target_name} lv2_ttl_generator
                 WORKING_DIRECTORY "${products_folder}/${product_name}.lv2/"
                 VERBATIM)
@@ -2003,6 +2010,7 @@ function(_juce_initialise_target target)
         VST_NUM_MIDI_OUTS
         VST2_CATEGORY
         LV2_URI
+       LV2_SHARED_LIBRARY_NAME
         AU_MAIN_TYPE
         AU_EXPORT_PREFIX
         AU_SANDBOX_SAFE
