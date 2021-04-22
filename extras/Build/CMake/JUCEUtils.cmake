@@ -1376,10 +1376,11 @@ function(_juce_set_plugin_target_properties shared_code_target kind)
                 WORKING_DIRECTORY "${products_folder}/${product_name}.lv2/"
                 VERBATIM)
         else()
-            add_executable(lv2_ttl_generator ${JUCE_SOURCE_DIR}/extras/Build/lv2_ttl_generator/lv2_ttl_generator.c)
-            target_link_libraries(lv2_ttl_generator dl)
+            add_executable(${target_name}_lv2_ttl_generator ${JUCE_SOURCE_DIR}/extras/Build/lv2_ttl_generator/lv2_ttl_generator.c)
+            set_source_files_properties(${JUCE_SOURCE_DIR}/extras/Build/lv2_ttl_generator/lv2_ttl_generator.c PROPERTIES LANGUAGE CXX)
+            target_link_libraries(${target_name}_lv2_ttl_generator dl)
             add_custom_command(TARGET ${target_name} POST_BUILD
-                COMMAND lv2_ttl_generator "${output_path}/${shared_code_target}.so"
+                COMMAND ${target_name}_lv2_ttl_generator "./${product_name}.so"
                 DEPENDS ${target_name} lv2_ttl_generator
                 WORKING_DIRECTORY "${products_folder}/${product_name}.lv2/"
                 VERBATIM)
