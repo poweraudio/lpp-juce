@@ -1385,7 +1385,7 @@ function(_juce_set_plugin_target_properties shared_code_target kind)
         else()
             add_executable(${target_name}_lv2_ttl_generator ${JUCE_SOURCE_DIR}/extras/Build/lv2_ttl_generator/lv2_ttl_generator.c)
             set_source_files_properties(${JUCE_SOURCE_DIR}/extras/Build/lv2_ttl_generator/lv2_ttl_generator.c PROPERTIES LANGUAGE CXX)
-            target_link_libraries(${target_name}_lv2_ttl_generator dl)
+            target_link_libraries(${target_name}_lv2_ttl_generator dl pthread)
             add_custom_command(TARGET ${target_name} POST_BUILD
                 COMMAND ${target_name}_lv2_ttl_generator "./${lv2_shared_lib}.so"
                 DEPENDS ${target_name} lv2_ttl_generator
