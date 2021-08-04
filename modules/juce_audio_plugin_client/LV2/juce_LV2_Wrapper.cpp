@@ -567,7 +567,7 @@ public:
     //==============================================================================
     // Juce calls
 
-    void audioProcessorParameterChanged (AudioProcessor*, int index, float newValue)
+    void audioProcessorParameterChanged (AudioProcessor*, int index, float newValue) override
     {
         if (inParameterChangedCallback.get())
         {
@@ -592,7 +592,7 @@ public:
         }
     }
 
-    void audioProcessorChanged (AudioProcessor*, const ChangeDetails& details)
+    void audioProcessorChanged (AudioProcessor*, const ChangeDetails& details) override
     {
         if (details.programChanged && filter != nullptr && programsHost != nullptr)
         {
@@ -606,7 +606,7 @@ public:
         }
     }
 
-    void audioProcessorParameterChangeGestureBegin (AudioProcessor*, int parameterIndex)
+    void audioProcessorParameterChangeGestureBegin (AudioProcessor*, int parameterIndex) override
     {
         if (uiTouch == nullptr)
             return;
@@ -625,7 +625,7 @@ public:
         }
     }
 
-    void audioProcessorParameterChangeGestureEnd (AudioProcessor*, int parameterIndex)
+    void audioProcessorParameterChangeGestureEnd (AudioProcessor*, int parameterIndex) override
     {
         if (uiTouch == nullptr)
             return;
@@ -663,7 +663,7 @@ public:
         }
     }
 
-    void timerCallback()
+    void timerCallback() override
     {
         if (externalUI != nullptr && externalUI->isClosed())
         {
