@@ -899,8 +899,8 @@ public:
         portAudioIns.insertMultiple (0, nullptr, numInChans);
         portAudioOuts.insertMultiple (0, nullptr, numOutChans);
         portControls.insertMultiple (0, nullptr, filter->getParameters().size());
-        for (auto* parameter : filter->getParameters())
-            lastControlValues.add (parameter->getValue());
+        for (int i=0; i < filter->getParameters().size(); ++i)
+            lastControlValues.add (filter->getParameter(i));
 
         curPosInfo.resetToDefault();
 
@@ -1495,10 +1495,9 @@ public:
             filter->setCurrentProgram(realProgram);
 
             // update input control ports now
-            const auto& parameters = filter->getParameters();
-            for (int i = 0; i < parameters.size(); ++i)
+            for (int i = 0; i < portControls.size(); ++i)
             {
-                float value = parameters[i]->getValue();
+                float value = filter->getParameter(i);
 
                 if (portControls[i] != nullptr)
                     *portControls[i] = value;
