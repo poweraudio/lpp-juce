@@ -963,7 +963,7 @@ function(_juce_set_plugin_target_properties shared_code_target kind)
                 VERBATIM)
         endif()
 
-        _juce_copy_after_build(${shared_code_target} ${target_name} "${output_path}" JUCE_LV2_COPY_DIR)
+        _juce_set_copy_properties(${shared_code_target} ${target_name} "${output_path}" JUCE_LV2_COPY_DIR)
     elseif(kind STREQUAL "AU")
         set_target_properties(${target_name} PROPERTIES
             BUNDLE_EXTENSION component
