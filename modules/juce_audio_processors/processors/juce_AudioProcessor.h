@@ -1214,7 +1214,6 @@ public:
         wrapperType_LV2,
         wrapperType_Standalone,
         wrapperType_Unity,
-        wrapperType_LV2
     };
 
     /** When loaded by a plugin wrapper, this flag will be set to indicate the type
