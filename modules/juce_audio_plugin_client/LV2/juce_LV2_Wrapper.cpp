@@ -567,6 +567,7 @@ public:
     //==============================================================================
     // Juce calls
 
+
     void audioProcessorParameterChanged (AudioProcessor*, int index, float newValue) override
     {
         if (inParameterChangedCallback.get())
