@@ -567,7 +567,6 @@ public:
     //==============================================================================
     // Juce calls
 
-
     void audioProcessorParameterChanged (AudioProcessor*, int index, float newValue) override
     {
         if (inParameterChangedCallback.get())
@@ -1146,7 +1145,8 @@ public:
                     channels[i] = portAudioOuts[i];
 
                     if (i < numInChans && portAudioIns[i] != portAudioOuts[i])
-                        FloatVectorOperations::copy (portAudioOuts [i], portAudioIns[i], sampleCount);
+                        //FloatVectorOperations::copy (portAudioOuts [i], portAudioIns[i], sampleCount);
+                        std::copy(portAudioOuts[i], portAudioOuts[i] + sampleCount, portAudioIns[i]);
                 }
 
                 for (; i < numInChans; ++i)
