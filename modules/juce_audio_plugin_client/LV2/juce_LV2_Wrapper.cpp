@@ -1145,7 +1145,6 @@ public:
                     channels[i] = portAudioOuts[i];
 
                     if (i < numInChans && portAudioIns[i] != portAudioOuts[i])
-                        //FloatVectorOperations::copy (portAudioOuts [i], portAudioIns[i], sampleCount);
                         std::memcpy(portAudioOuts[i], portAudioIns[i], sizeof(float) * sampleCount);
                 }
 
