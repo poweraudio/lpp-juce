@@ -257,10 +257,10 @@ public:
         return window.isClosed();
     }
 
-    void reset(const String& title)
+    void reset (const String& title)
     {
         window.reset();
-        window.setName(title);
+        window.setName (title);
     }
 
     void repaint()
@@ -279,7 +279,7 @@ public:
     void setScreenPos (int x, int y)
     {
         if (! window.isClosed())
-            window.setTopLeftPosition(x, y);
+            window.setTopLeftPosition (x, y);
     }
 
     //==============================================================================
@@ -303,7 +303,7 @@ public:
                 self->window.addToDesktop();
 
             self->window.restoreLastPos();
-            self->window.setVisible(true);
+            self->window.setVisible (true);
         }
     }
 
@@ -315,7 +315,7 @@ public:
         if (! self->isClosed())
         {
             self->window.saveLastPos();
-            self->window.setVisible(false);
+            self->window.setVisible (false);
         }
     }
 
@@ -334,12 +334,12 @@ class JuceLv2ParentContainer : public Component
 public:
     struct SizeListener {
         virtual ~SizeListener() {}
-        virtual void parentWindowSizeChanged(int cw, int ch) = 0;
+        virtual void parentWindowSizeChanged (int cw, int ch) = 0;
     };
 
     JuceLv2ParentContainer (std::unique_ptr<AudioProcessorEditor>& editor,
                             SizeListener* const sizeListener_)
-        : sizeListener(sizeListener_)
+        : sizeListener (sizeListener_)
     {
         setOpaque (true);
         editor->setOpaque (true);
@@ -412,11 +412,11 @@ public:
     {
         jassert (filter != nullptr);
 
-        filter->addListener(this);
+        filter->addListener (this);
 
         if (filter->hasEditor())
         {
-            editor = std::unique_ptr<AudioProcessorEditor>(filter->createEditorIfNeeded());
+            editor = std::unique_ptr<AudioProcessorEditor> (filter->createEditorIfNeeded());
 
             if (editor == nullptr)
             {
@@ -427,11 +427,11 @@ public:
 
         for (int i = 0; features[i] != nullptr; ++i)
         {
-            if (strcmp(features[i]->URI, LV2_UI__touch) == 0)
-                uiTouch = (const LV2UI_Touch*)features[i]->data;
+            if (strcmp (features[i]->URI, LV2_UI__touch) == 0)
+                uiTouch = (const LV2UI_Touch*) features[i]->data;
 
-            else if (strcmp(features[i]->URI, LV2_PROGRAMS__Host) == 0)
-                programsHost = (const LV2_Programs_Host*)features[i]->data;
+            else if (strcmp (features[i]->URI, LV2_PROGRAMS__Host) == 0)
+                programsHost = (const LV2_Programs_Host*) features[i]->data;
         }
 
         if (isExternal)
@@ -483,7 +483,7 @@ public:
     {
         PopupMenu::dismissAllActiveMenus();
 
-        filter->removeListener(this);
+        filter->removeListener (this);
 
         parentContainer = nullptr;
         externalUI = nullptr;
@@ -537,8 +537,8 @@ public:
         Array<IdleMessage> idleMessagesCopy;
 
         {
-            const ScopedLock sl(idleMessagesLock);
-            idleMessages.swapWith(idleMessagesCopy);
+            const ScopedLock sl (idleMessagesLock);
+            idleMessages.swapWith (idleMessagesCopy);
         }
 
         for (auto& msg : idleMessagesCopy)
@@ -582,8 +582,8 @@ public:
         if (hostHasIdleInterface && ! isExternal)
         {
             const IdleMessage msg = { IdleMessage::kMessageParameterChanged, index, 0, newValue };
-            const ScopedLock sl(idleMessagesLock);
-            idleMessages.add(msg);
+            const ScopedLock sl (idleMessagesLock);
+            idleMessages.add (msg);
         }
         else
        #endif
@@ -615,8 +615,8 @@ public:
         if (hostHasIdleInterface && ! isExternal)
         {
             const IdleMessage msg = { IdleMessage::kMessageGestureBegin, parameterIndex, 0, 0.0f };
-            const ScopedLock sl(idleMessagesLock);
-            idleMessages.add(msg);
+            const ScopedLock sl (idleMessagesLock);
+            idleMessages.add (msg);
         }
         else
        #endif
@@ -634,8 +634,8 @@ public:
         if (hostHasIdleInterface && ! isExternal)
         {
             const IdleMessage msg = { IdleMessage::kMessageGestureEnd, parameterIndex, 0, 0.0f };
-            const ScopedLock sl(idleMessagesLock);
-            idleMessages.add(msg);
+            const ScopedLock sl (idleMessagesLock);
+            idleMessages.add (msg);
         }
         else
        #endif
@@ -644,7 +644,7 @@ public:
         }
     }
 
-    void parentWindowSizeChanged(int cw, int ch) override
+    void parentWindowSizeChanged (int cw, int ch) override
     {
         if (uiResize == nullptr)
             return;
@@ -653,8 +653,8 @@ public:
         if (hostHasIdleInterface && ! isExternal)
         {
             const IdleMessage msg = { IdleMessage::kMessageSizeChanged, cw, ch, 0.0f };
-            const ScopedLock sl(idleMessagesLock);
-            idleMessages.add(msg);
+            const ScopedLock sl (idleMessagesLock);
+            idleMessages.add (msg);
         }
         else
        #endif
@@ -686,11 +686,11 @@ public:
 
         for (int i = 0; features[i] != nullptr; ++i)
         {
-            if (strcmp(features[i]->URI, LV2_UI__touch) == 0)
-                uiTouch = (const LV2UI_Touch*)features[i]->data;
+            if (strcmp (features[i]->URI, LV2_UI__touch) == 0)
+                uiTouch = (const LV2UI_Touch*) features[i]->data;
 
-            else if (strcmp(features[i]->URI, LV2_PROGRAMS__Host) == 0)
-                programsHost = (const LV2_Programs_Host*)features[i]->data;
+            else if (strcmp (features[i]->URI, LV2_PROGRAMS__Host) == 0)
+                programsHost = (const LV2_Programs_Host*) features[i]->data;
         }
 
         if (isExternal)
@@ -701,7 +701,7 @@ public:
         else
         {
             if (editor == nullptr)
-                editor = std::unique_ptr<AudioProcessorEditor>(filter->createEditorIfNeeded());
+                editor = std::unique_ptr<AudioProcessorEditor> (filter->createEditorIfNeeded());
 
             resetParentUI (features);
             *widget = parentContainer->getWindowHandle();
@@ -768,24 +768,24 @@ private:
 
         for (int i = 0; features[i] != nullptr; ++i)
         {
-            if (strcmp(features[i]->URI, LV2_EXTERNAL_UI__Host) == 0)
+            if (strcmp (features[i]->URI, LV2_EXTERNAL_UI__Host) == 0)
             {
-                externalUIHost = (const LV2_External_UI_Host*)features[i]->data;
+                externalUIHost = (const LV2_External_UI_Host*) features[i]->data;
                 break;
             }
         }
 
         if (externalUI != nullptr)
         {
-            String title(filter->getName());
+            String title (filter->getName());
 
             if (externalUIHost->plugin_human_id != nullptr)
                 title = externalUIHost->plugin_human_id;
 
             if (lastExternalUIPos.getX() != -1 && lastExternalUIPos.getY() != -1)
-                externalUI->setScreenPos(lastExternalUIPos.getX(), lastExternalUIPos.getY());
+                externalUI->setScreenPos (lastExternalUIPos.getX(), lastExternalUIPos.getY());
 
-            externalUI->reset(title);
+            externalUI->reset (title);
             startTimer (100);
         }
     }
@@ -797,11 +797,11 @@ private:
 
         for (int i = 0; features[i] != nullptr; ++i)
         {
-            if (strcmp(features[i]->URI, LV2_UI__parent) == 0)
+            if (strcmp (features[i]->URI, LV2_UI__parent) == 0)
                 parent = features[i]->data;
 
-            else if (strcmp(features[i]->URI, LV2_UI__resize) == 0)
-                uiResize = (const LV2UI_Resize*)features[i]->data;
+            else if (strcmp (features[i]->URI, LV2_UI__resize) == 0)
+                uiResize = (const LV2UI_Resize*) features[i]->data;
         }
 
         if (parent != nullptr)
@@ -905,11 +905,11 @@ public:
         curPosInfo.resetToDefault();
 
         // we need URID_Map first
-        for (int i=0; features[i] != nullptr; ++i)
+        for (int i = 0; features[i] != nullptr; ++i)
         {
-            if (strcmp(features[i]->URI, LV2_URID__map) == 0)
+            if (strcmp (features[i]->URI, LV2_URID__map) == 0)
             {
-                uridMap = (const LV2_URID_Map*)features[i]->data;
+                uridMap = (const LV2_URID_Map*) features[i]->data;
                 break;
             }
         }
@@ -919,36 +919,36 @@ public:
 
         if (uridMap != nullptr)
         {
-            uridAtomBlank = uridMap->map(uridMap->handle, LV2_ATOM__Blank);
-            uridAtomObject = uridMap->map(uridMap->handle, LV2_ATOM__Object);
-            uridAtomDouble = uridMap->map(uridMap->handle, LV2_ATOM__Double);
-            uridAtomFloat = uridMap->map(uridMap->handle, LV2_ATOM__Float);
-            uridAtomInt = uridMap->map(uridMap->handle, LV2_ATOM__Int);
-            uridAtomLong = uridMap->map(uridMap->handle, LV2_ATOM__Long);
-            uridAtomSequence = uridMap->map(uridMap->handle, LV2_ATOM__Sequence);
-            uridMidiEvent = uridMap->map(uridMap->handle, LV2_MIDI__MidiEvent);
-            uridTimePos = uridMap->map(uridMap->handle, LV2_TIME__Position);
-            uridTimeBar = uridMap->map(uridMap->handle, LV2_TIME__bar);
-            uridTimeBarBeat = uridMap->map(uridMap->handle, LV2_TIME__barBeat);
-            uridTimeBeatsPerBar = uridMap->map(uridMap->handle, LV2_TIME__beatsPerBar);
-            uridTimeBeatsPerMinute = uridMap->map(uridMap->handle, LV2_TIME__beatsPerMinute);
-            uridTimeBeatUnit = uridMap->map(uridMap->handle, LV2_TIME__beatUnit);
-            uridTimeFrame = uridMap->map(uridMap->handle, LV2_TIME__frame);
-            uridTimeSpeed = uridMap->map(uridMap->handle, LV2_TIME__speed);
+            uridAtomBlank = uridMap->map (uridMap->handle, LV2_ATOM__Blank);
+            uridAtomObject = uridMap->map (uridMap->handle, LV2_ATOM__Object);
+            uridAtomDouble = uridMap->map (uridMap->handle, LV2_ATOM__Double);
+            uridAtomFloat = uridMap->map (uridMap->handle, LV2_ATOM__Float);
+            uridAtomInt = uridMap->map (uridMap->handle, LV2_ATOM__Int);
+            uridAtomLong = uridMap->map (uridMap->handle, LV2_ATOM__Long);
+            uridAtomSequence = uridMap->map (uridMap->handle, LV2_ATOM__Sequence);
+            uridMidiEvent = uridMap->map (uridMap->handle, LV2_MIDI__MidiEvent);
+            uridTimePos = uridMap->map (uridMap->handle, LV2_TIME__Position);
+            uridTimeBar = uridMap->map (uridMap->handle, LV2_TIME__bar);
+            uridTimeBarBeat = uridMap->map (uridMap->handle, LV2_TIME__barBeat);
+            uridTimeBeatsPerBar = uridMap->map (uridMap->handle, LV2_TIME__beatsPerBar);
+            uridTimeBeatsPerMinute = uridMap->map (uridMap->handle, LV2_TIME__beatsPerMinute);
+            uridTimeBeatUnit = uridMap->map (uridMap->handle, LV2_TIME__beatUnit);
+            uridTimeFrame = uridMap->map (uridMap->handle, LV2_TIME__frame);
+            uridTimeSpeed = uridMap->map (uridMap->handle, LV2_TIME__speed);
 
-            for (int i=0; features[i] != nullptr; ++i)
+            for (int i = 0; features[i] != nullptr; ++i)
             {
-                if (strcmp(features[i]->URI, LV2_OPTIONS__options) == 0)
+                if (strcmp (features[i]->URI, LV2_OPTIONS__options) == 0)
                 {
-                    const LV2_Options_Option* options = (const LV2_Options_Option*)features[i]->data;
+                    const LV2_Options_Option* options = (const LV2_Options_Option*) features[i]->data;
 
-                    for (int j=0; options[j].key != 0; ++j)
+                    for (int j = 0; options[j].key != 0; ++j)
                     {
-                        if (options[j].key == uridMap->map(uridMap->handle, LV2_BUF_SIZE__nominalBlockLength))
+                        if (options[j].key == uridMap->map (uridMap->handle, LV2_BUF_SIZE__nominalBlockLength))
                         {
                             if (options[j].type == uridAtomInt)
                             {
-                                bufferSize = *(int*)options[j].value;
+                                bufferSize = *(int*) options[j].value;
                                 usingNominalBlockLength = true;
                             }
                             else
@@ -958,10 +958,10 @@ public:
                             break;
                         }
 
-                        if (options[j].key == uridMap->map(uridMap->handle, LV2_BUF_SIZE__maxBlockLength))
+                        if (options[j].key == uridMap->map (uridMap->handle, LV2_BUF_SIZE__maxBlockLength))
                         {
                             if (options[j].type == uridAtomInt)
-                                bufferSize = *(int*)options[j].value;
+                                bufferSize = *(int*) options[j].value;
                             else
                                 std::cerr << "Host provides maxBlockLength but has wrong value type" << std::endl;
 
@@ -988,7 +988,7 @@ public:
         filter = nullptr;
 
         if (progDesc.name != nullptr)
-            free((void*)progDesc.name);
+            free ((void*) progDesc.name);
 
         portControls.clear();
         lastControlValues.clear();
@@ -1004,7 +1004,7 @@ public:
 #if (JucePlugin_WantsMidiInput || JucePlugin_WantsLV2TimePos)
         if (portId == index++)
         {
-            portEventsIn = (LV2_Atom_Sequence*)dataLocation;
+            portEventsIn = (LV2_Atom_Sequence*) dataLocation;
             return;
         }
 #endif
@@ -1012,48 +1012,48 @@ public:
 #if JucePlugin_ProducesMidiOutput
         if (portId == index++)
         {
-            portMidiOut = (LV2_Atom_Sequence*)dataLocation;
+            portMidiOut = (LV2_Atom_Sequence*) dataLocation;
             return;
         }
 #endif
 
         if (portId == index++)
         {
-            portFreewheel = (float*)dataLocation;
+            portFreewheel = (float*) dataLocation;
             return;
         }
 
 #if JucePlugin_WantsLV2Latency
         if (portId == index++)
         {
-            portLatency = (float*)dataLocation;
+            portLatency = (float*) dataLocation;
             return;
         }
 #endif
 
-        for (int i=0; i < numInChans; ++i)
+        for (int i = 0; i < numInChans; ++i)
         {
             if (portId == index++)
             {
-                portAudioIns.set(i, (float*)dataLocation);
+                portAudioIns.set (i, (float*) dataLocation);
                 return;
             }
         }
 
-        for (int i=0; i < numOutChans; ++i)
+        for (int i = 0; i < numOutChans; ++i)
         {
             if (portId == index++)
             {
-                portAudioOuts.set(i, (float*)dataLocation);
+                portAudioOuts.set (i, (float*) dataLocation);
                 return;
             }
         }
 
-        for (int i=0; i < filter->getParameters().size(); ++i)
+        for (int i = 0; i < filter->getParameters().size(); ++i)
         {
             if (portId == index++)
             {
-                portControls.set(i, (float*)dataLocation);
+                portControls.set (i, (float*) dataLocation);
                 return;
             }
         }
@@ -1145,7 +1145,7 @@ public:
                     channels[i] = portAudioOuts[i];
 
                     if (i < numInChans && portAudioIns[i] != portAudioOuts[i])
-                        std::memcpy(portAudioOuts[i], portAudioIns[i], sizeof(float) * sampleCount);
+                        std::memcpy (portAudioOuts[i], portAudioIns[i], sizeof (float) * sampleCount);
                 }
 
                 for (; i < numInChans; ++i)
@@ -1156,9 +1156,9 @@ public:
                 {
                     midiEvents.clear();
 
-                    LV2_ATOM_SEQUENCE_FOREACH(portEventsIn, iter)
+                    LV2_ATOM_SEQUENCE_FOREACH (portEventsIn, iter)
                     {
-                        const LV2_Atom_Event* event = (const LV2_Atom_Event*)iter;
+                        const LV2_Atom_Event* event = (const LV2_Atom_Event*) iter;
 
                         if (event == nullptr)
                             continue;
@@ -1168,15 +1168,15 @@ public:
  #if JucePlugin_WantsMidiInput
                         if (event->body.type == uridMidiEvent)
                         {
-                            const uint8* data = (const uint8*)(event + 1);
-                            midiEvents.addEvent(data, event->body.size, static_cast<int>(event->time.frames));
+                            const uint8* data = (const uint8*) (event + 1);
+                            midiEvents.addEvent (data, event->body.size, static_cast<int> (event->time.frames));
                             continue;
                         }
  #endif
  #if JucePlugin_WantsLV2TimePos
                         if (event->body.type == uridAtomBlank || event->body.type == uridAtomObject)
                         {
-                            const LV2_Atom_Object* obj = (LV2_Atom_Object*)&event->body;
+                            const LV2_Atom_Object* obj = (LV2_Atom_Object*) &event->body;
 
                             if (obj->body.otype != uridTimePos)
                                 continue;
@@ -1203,13 +1203,13 @@ public:
                             if (speed != nullptr)
                             {
                                 /**/ if (speed->type == uridAtomDouble)
-                                    lastPositionData.speed = ((LV2_Atom_Double*)speed)->body;
+                                    lastPositionData.speed = ((LV2_Atom_Double*) speed)->body;
                                 else if (speed->type == uridAtomFloat)
-                                    lastPositionData.speed = ((LV2_Atom_Float*)speed)->body;
+                                    lastPositionData.speed = ((LV2_Atom_Float*) speed)->body;
                                 else if (speed->type == uridAtomInt)
-                                    lastPositionData.speed = ((LV2_Atom_Int*)speed)->body;
+                                    lastPositionData.speed = ((LV2_Atom_Int*) speed)->body;
                                 else if (speed->type == uridAtomLong)
-                                    lastPositionData.speed = ((LV2_Atom_Long*)speed)->body;
+                                    lastPositionData.speed = ((LV2_Atom_Long*) speed)->body;
 
                                 curPosInfo.isPlaying = lastPositionData.speed != 0.0;
                             }
@@ -1217,37 +1217,37 @@ public:
                             if (bar != nullptr)
                             {
                                 /**/ if (bar->type == uridAtomDouble)
-                                    lastPositionData.bar = ((LV2_Atom_Double*)bar)->body;
+                                    lastPositionData.bar = ((LV2_Atom_Double*) bar)->body;
                                 else if (bar->type == uridAtomFloat)
-                                    lastPositionData.bar = ((LV2_Atom_Float*)bar)->body;
+                                    lastPositionData.bar = ((LV2_Atom_Float*) bar)->body;
                                 else if (bar->type == uridAtomInt)
-                                    lastPositionData.bar = ((LV2_Atom_Int*)bar)->body;
+                                    lastPositionData.bar = ((LV2_Atom_Int*) bar)->body;
                                 else if (bar->type == uridAtomLong)
-                                    lastPositionData.bar = ((LV2_Atom_Long*)bar)->body;
+                                    lastPositionData.bar = ((LV2_Atom_Long*) bar)->body;
                             }
 
                             if (barBeat != nullptr)
                             {
                                 /**/ if (barBeat->type == uridAtomDouble)
-                                    lastPositionData.barBeat = ((LV2_Atom_Double*)barBeat)->body;
+                                    lastPositionData.barBeat = ((LV2_Atom_Double*) barBeat)->body;
                                 else if (barBeat->type == uridAtomFloat)
-                                    lastPositionData.barBeat = ((LV2_Atom_Float*)barBeat)->body;
+                                    lastPositionData.barBeat = ((LV2_Atom_Float*) barBeat)->body;
                                 else if (barBeat->type == uridAtomInt)
-                                    lastPositionData.barBeat = ((LV2_Atom_Int*)barBeat)->body;
+                                    lastPositionData.barBeat = ((LV2_Atom_Int*) barBeat)->body;
                                 else if (barBeat->type == uridAtomLong)
-                                    lastPositionData.barBeat = ((LV2_Atom_Long*)barBeat)->body;
+                                    lastPositionData.barBeat = ((LV2_Atom_Long*) barBeat)->body;
                             }
 
                             if (beatUnit != nullptr)
                             {
                                 /**/ if (beatUnit->type == uridAtomDouble)
-                                    lastPositionData.beatUnit = ((LV2_Atom_Double*)beatUnit)->body;
+                                    lastPositionData.beatUnit = ((LV2_Atom_Double*) beatUnit)->body;
                                 else if (beatUnit->type == uridAtomFloat)
-                                    lastPositionData.beatUnit = ((LV2_Atom_Float*)beatUnit)->body;
+                                    lastPositionData.beatUnit = ((LV2_Atom_Float*) beatUnit)->body;
                                 else if (beatUnit->type == uridAtomInt)
-                                    lastPositionData.beatUnit = ((LV2_Atom_Int*)beatUnit)->body;
+                                    lastPositionData.beatUnit = ((LV2_Atom_Int*) beatUnit)->body;
                                 else if (beatUnit->type == uridAtomLong)
-                                    lastPositionData.beatUnit = static_cast<uint32_t>(((LV2_Atom_Long*)beatUnit)->body);
+                                    lastPositionData.beatUnit = static_cast<uint32_t> (((LV2_Atom_Long*) beatUnit)->body);
 
                                 if (lastPositionData.beatUnit > 0)
                                     curPosInfo.timeSigDenominator = lastPositionData.beatUnit;
@@ -1256,13 +1256,13 @@ public:
                             if (beatsPerBar != nullptr)
                             {
                                 /**/ if (beatsPerBar->type == uridAtomDouble)
-                                    lastPositionData.beatsPerBar = ((LV2_Atom_Double*)beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = ((LV2_Atom_Double*) beatsPerBar)->body;
                                 else if (beatsPerBar->type == uridAtomFloat)
-                                    lastPositionData.beatsPerBar = ((LV2_Atom_Float*)beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = ((LV2_Atom_Float*) beatsPerBar)->body;
                                 else if (beatsPerBar->type == uridAtomInt)
-                                    lastPositionData.beatsPerBar = ((LV2_Atom_Int*)beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = ((LV2_Atom_Int*) beatsPerBar)->body;
                                 else if (beatsPerBar->type == uridAtomLong)
-                                    lastPositionData.beatsPerBar = ((LV2_Atom_Long*)beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = ((LV2_Atom_Long*) beatsPerBar)->body;
 
                                 if (lastPositionData.beatsPerBar > 0.0f)
                                     curPosInfo.timeSigNumerator = lastPositionData.beatsPerBar;
@@ -1271,38 +1271,38 @@ public:
                             if (beatsPerMinute != nullptr)
                             {
                                 /**/ if (beatsPerMinute->type == uridAtomDouble)
-                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Double*)beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Double*) beatsPerMinute)->body;
                                 else if (beatsPerMinute->type == uridAtomFloat)
-                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Float*)beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Float*) beatsPerMinute)->body;
                                 else if (beatsPerMinute->type == uridAtomInt)
-                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Int*)beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Int*) beatsPerMinute)->body;
                                 else if (beatsPerMinute->type == uridAtomLong)
-                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Long*)beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Long*) beatsPerMinute)->body;
 
                                 if (lastPositionData.beatsPerMinute > 0.0f)
                                 {
                                     curPosInfo.bpm = lastPositionData.beatsPerMinute;
 
                                     if (lastPositionData.speed != 0)
-                                        curPosInfo.bpm *= std::abs(lastPositionData.speed);
+                                        curPosInfo.bpm *= std::abs (lastPositionData.speed);
                                 }
                             }
 
                             if (frame != nullptr)
                             {
                                 /**/ if (frame->type == uridAtomDouble)
-                                    lastPositionData.frame = ((LV2_Atom_Double*)frame)->body;
+                                    lastPositionData.frame = ((LV2_Atom_Double*) frame)->body;
                                 else if (frame->type == uridAtomFloat)
-                                    lastPositionData.frame = ((LV2_Atom_Float*)frame)->body;
+                                    lastPositionData.frame = ((LV2_Atom_Float*) frame)->body;
                                 else if (frame->type == uridAtomInt)
-                                    lastPositionData.frame = ((LV2_Atom_Int*)frame)->body;
+                                    lastPositionData.frame = ((LV2_Atom_Int*) frame)->body;
                                 else if (frame->type == uridAtomLong)
-                                    lastPositionData.frame = ((LV2_Atom_Long*)frame)->body;
+                                    lastPositionData.frame = ((LV2_Atom_Long*) frame)->body;
 
                                 if (lastPositionData.frame >= 0)
                                 {
                                     curPosInfo.timeInSamples = lastPositionData.frame;
-                                    curPosInfo.timeInSeconds = double(curPosInfo.timeInSamples)/sampleRate;
+                                    curPosInfo.timeInSeconds = double (curPosInfo.timeInSamples)/sampleRate;
                                 }
                             }
 
@@ -1348,19 +1348,19 @@ public:
             }
 
             curPosInfo.timeInSamples = lastPositionData.frame;
-            curPosInfo.timeInSeconds = double(curPosInfo.timeInSamples)/sampleRate;
+            curPosInfo.timeInSeconds = double (curPosInfo.timeInSamples)/sampleRate;
 
             if (lastPositionData.extraValid)
             {
                 const double beatsPerMinute = lastPositionData.beatsPerMinute * lastPositionData.speed;
                 const double framesPerBeat  = 60.0 * sampleRate / beatsPerMinute;
-                const double addedBarBeats  = double(sampleCount) / framesPerBeat;
+                const double addedBarBeats  = double (sampleCount) / framesPerBeat;
 
                 if (lastPositionData.bar >= 0 && lastPositionData.barBeat >= 0.0f)
                 {
-                    lastPositionData.bar    += std::floor((lastPositionData.barBeat+addedBarBeats)/
+                    lastPositionData.bar    += std::floor ((lastPositionData.barBeat+addedBarBeats)/
                                                            lastPositionData.beatsPerBar);
-                    lastPositionData.barBeat = std::fmod(lastPositionData.barBeat+addedBarBeats,
+                    lastPositionData.barBeat = std::fmod (lastPositionData.barBeat+addedBarBeats,
                                                          lastPositionData.beatsPerBar);
 
                     if (lastPositionData.bar < 0)
@@ -1370,7 +1370,7 @@ public:
                     curPosInfo.ppqPosition = curPosInfo.ppqPositionOfLastBarStart + lastPositionData.barBeat;
                 }
 
-                curPosInfo.bpm = std::abs(beatsPerMinute);
+                curPosInfo.bpm = std::abs (beatsPerMinute);
             }
         }
 #endif
@@ -1380,7 +1380,7 @@ public:
         {
             const uint32_t capacity = portMidiOut->atom.size;
 
-            portMidiOut->atom.size = sizeof(LV2_Atom_Sequence_Body);
+            portMidiOut->atom.size = sizeof (LV2_Atom_Sequence_Body);
             portMidiOut->atom.type = uridAtomSequence;
             portMidiOut->body.unit = 0;
             portMidiOut->body.pad  = 0;
@@ -1396,18 +1396,18 @@ public:
 
                 while (i.getNextEvent (midiEventData, midiEventSize, midiEventPosition))
                 {
-                    jassert (midiEventPosition >= 0 && midiEventPosition < (int)sampleCount);
+                    jassert (midiEventPosition >= 0 && midiEventPosition < (int) sampleCount);
 
-                    if (sizeof(LV2_Atom_Event) + midiEventSize > capacity - offset)
+                    if (sizeof (LV2_Atom_Event) + midiEventSize > capacity - offset)
                         break;
 
-                    aev = (LV2_Atom_Event*)((char*)LV2_ATOM_CONTENTS(LV2_Atom_Sequence, portMidiOut) + offset);
+                    aev = (LV2_Atom_Event*) ((char*) LV2_ATOM_CONTENTS (LV2_Atom_Sequence, portMidiOut) + offset);
                     aev->time.frames = midiEventPosition;
                     aev->body.type   = uridMidiEvent;
                     aev->body.size   = midiEventSize;
-                    memcpy(LV2_ATOM_BODY(&aev->body), midiEventData, midiEventSize);
+                    memcpy (LV2_ATOM_BODY (&aev->body), midiEventData, midiEventSize);
 
-                    size    = lv2_atom_pad_size(sizeof(LV2_Atom_Event) + midiEventSize);
+                    size    = lv2_atom_pad_size (sizeof (LV2_Atom_Event) + midiEventSize);
                     offset += size;
                     portMidiOut->atom.size += size;
                 }
@@ -1428,33 +1428,33 @@ public:
     uint32_t lv2GetOptions (LV2_Options_Option* options)
     {
         // currently unused
-        ignoreUnused(options);
+        ignoreUnused (options);
 
         return LV2_OPTIONS_SUCCESS;
     }
 
     uint32_t lv2SetOptions (const LV2_Options_Option* options)
     {
-        for (int i=0; options[i].key != 0; ++i)
+        for (int i = 0; options[i].key != 0; ++i)
         {
-            if (options[i].key == uridMap->map(uridMap->handle, LV2_BUF_SIZE__nominalBlockLength))
+            if (options[i].key == uridMap->map (uridMap->handle, LV2_BUF_SIZE__nominalBlockLength))
             {
                 if (options[i].type == uridAtomInt)
-                    bufferSize = *(const int32_t*)options[i].value;
+                    bufferSize = *(const int32_t*) options[i].value;
                 else
                     std::cerr << "Host changed nominalBlockLength but with wrong value type" << std::endl;
             }
-            else if (options[i].key == uridMap->map(uridMap->handle, LV2_BUF_SIZE__maxBlockLength) && ! usingNominalBlockLength)
+            else if (options[i].key == uridMap->map (uridMap->handle, LV2_BUF_SIZE__maxBlockLength) && ! usingNominalBlockLength)
             {
                 if (options[i].type == uridAtomInt)
-                    bufferSize = *(const int32_t*)options[i].value;
+                    bufferSize = *(const int32_t*) options[i].value;
                 else
                     std::cerr << "Host changed maxBlockLength but with wrong value type" << std::endl;
             }
-            else if (options[i].key == uridMap->map(uridMap->handle, LV2_PARAMETERS__sampleRate))
+            else if (options[i].key == uridMap->map (uridMap->handle, LV2_PARAMETERS__sampleRate))
             {
                 if (options[i].type == uridAtomFloat)
-                    sampleRate = *(const float*)options[i].value;
+                    sampleRate = *(const float*) options[i].value;
                 else
                     std::cerr << "Host changed sampleRate but with wrong value type" << std::endl;
             }
@@ -1469,15 +1469,15 @@ public:
 
         if (progDesc.name != nullptr)
         {
-            free((void*)progDesc.name);
+            free ((void*) progDesc.name);
             progDesc.name = nullptr;
         }
 
-        if ((int)index < filter->getNumPrograms())
+        if ((int) index < filter->getNumPrograms())
         {
             progDesc.bank    = index / 128;
             progDesc.program = index % 128;
-            progDesc.name    = strdup(filter->getProgramName(index).toUTF8());
+            progDesc.name    = strdup (filter->getProgramName (index).toUTF8());
             return &progDesc;
         }
 
@@ -1492,7 +1492,7 @@ public:
 
         if (realProgram < filter->getNumPrograms())
         {
-            filter->setCurrentProgram(realProgram);
+            filter->setCurrentProgram (realProgram);
 
             // update input control ports now
             const auto& parameters = filter->getParameters();
@@ -1503,7 +1503,7 @@ public:
                 if (portControls[i] != nullptr)
                     *portControls[i] = value;
 
-                lastControlValues.set(i, value);
+                lastControlValues.set (i, value);
             }
         }
     }
@@ -1513,24 +1513,24 @@ public:
         jassert (filter != nullptr);
 
 #if JucePlugin_WantsLV2StateString
-        String stateData(filter->getStateInformationString().replace("\r\n","\n"));
-        CharPointer_UTF8 charData(stateData.toUTF8());
+        String stateData (filter->getStateInformationString().replace ("\r\n","\n"));
+        CharPointer_UTF8 charData (stateData.toUTF8());
 
         store (stateHandle,
-               uridMap->map(uridMap->handle, JUCE_LV2_STATE_STRING_URI),
+               uridMap->map (uridMap->handle, JUCE_LV2_STATE_STRING_URI),
                charData.getAddress(),
                charData.sizeInBytes(),
-               uridMap->map(uridMap->handle, LV2_ATOM__String),
+               uridMap->map (uridMap->handle, LV2_ATOM__String),
                LV2_STATE_IS_POD|LV2_STATE_IS_PORTABLE);
 #else
         MemoryBlock chunkMemory;
         filter->getCurrentProgramStateInformation (chunkMemory);
 
         store (stateHandle,
-               uridMap->map(uridMap->handle, JUCE_LV2_STATE_BINARY_URI),
+               uridMap->map (uridMap->handle, JUCE_LV2_STATE_BINARY_URI),
                chunkMemory.getData(),
                chunkMemory.getSize(),
-               uridMap->map(uridMap->handle, LV2_ATOM__Chunk),
+               uridMap->map (uridMap->handle, LV2_ATOM__Chunk),
                LV2_STATE_IS_POD|LV2_STATE_IS_PORTABLE);
 #endif
 
@@ -1545,9 +1545,9 @@ public:
         uint32 type = 0;
         const void* data = retrieve (stateHandle,
 #if JucePlugin_WantsLV2StateString
-                                     uridMap->map(uridMap->handle, JUCE_LV2_STATE_STRING_URI),
+                                     uridMap->map (uridMap->handle, JUCE_LV2_STATE_STRING_URI),
 #else
-                                     uridMap->map(uridMap->handle, JUCE_LV2_STATE_BINARY_URI),
+                                     uridMap->map (uridMap->handle, JUCE_LV2_STATE_BINARY_URI),
 #endif
                                      &size, &type, &flags);
 
@@ -1557,7 +1557,7 @@ public:
 #if JucePlugin_WantsLV2StateString
         if (type == uridMap->map (uridMap->handle, LV2_ATOM__String))
         {
-            String stateData (CharPointer_UTF8(static_cast<const char*>(data)));
+            String stateData (CharPointer_UTF8 (static_cast<const char*> (data)));
             filter->setStateInformationString (stateData);
 
            #if ! JUCE_AUDIOPROCESSOR_NO_GUI
@@ -1570,7 +1570,7 @@ public:
 #else
         if (type == uridMap->map (uridMap->handle, LV2_ATOM__Chunk))
         {
-            filter->setCurrentProgramStateInformation (data, static_cast<int>(size));
+            filter->setCurrentProgramStateInformation (data, static_cast<int> (size));
 
            #if ! JUCE_AUDIOPROCESSOR_NO_GUI
             if (ui != nullptr)
@@ -1593,7 +1593,7 @@ public:
         info = curPosInfo;
         return true;
 #else
-        ignoreUnused(info);
+        ignoreUnused (info);
         return false;
 #endif
     }
@@ -1664,14 +1664,14 @@ private:
         bool     extraValid;
 
         Lv2PositionData()
-            : bar(-1),
-              barBeat(-1.0f),
-              beatUnit(0),
-              beatsPerBar(0.0f),
-              beatsPerMinute(0.0f),
-              frame(-1),
-              speed(0.0),
-              extraValid(false) {}
+            : bar (-1),
+              barBeat (-1.0f),
+              beatUnit (0),
+              beatsPerBar (0.0f),
+              beatsPerMinute (0.0f),
+              frame (-1),
+              speed (0.0),
+              extraValid (false) {}
     };
     Lv2PositionData lastPositionData;
 
@@ -1708,7 +1708,7 @@ static LV2_Handle juceLV2_Instantiate (const LV2_Descriptor*, double sampleRate,
     return new JuceLv2Wrapper (sampleRate, features);
 }
 
-#define handlePtr ((JuceLv2Wrapper*)handle)
+#define handlePtr ((JuceLv2Wrapper*) handle)
 
 static void juceLV2_ConnectPort (LV2_Handle handle, uint32 port, void* dataLocation)
 {
@@ -1720,7 +1720,7 @@ static void juceLV2_Activate (LV2_Handle handle)
     handlePtr->lv2Activate();
 }
 
-static void juceLV2_Run( LV2_Handle handle, uint32 sampleCount)
+static void juceLV2_Run ( LV2_Handle handle, uint32 sampleCount)
 {
     handlePtr->lv2Run (sampleCount);
 }
@@ -1740,35 +1740,35 @@ static void juceLV2_Cleanup (LV2_Handle handle)
 
 static uint32_t juceLV2_getOptions (LV2_Handle handle, LV2_Options_Option* options)
 {
-    return handlePtr->lv2GetOptions(options);
+    return handlePtr->lv2GetOptions (options);
 }
 
 static uint32_t juceLV2_setOptions (LV2_Handle handle, const LV2_Options_Option* options)
 {
-    return handlePtr->lv2SetOptions(options);
+    return handlePtr->lv2SetOptions (options);
 }
 
 static const LV2_Program_Descriptor* juceLV2_getProgram (LV2_Handle handle, uint32_t index)
 {
-    return handlePtr->lv2GetProgram(index);
+    return handlePtr->lv2GetProgram (index);
 }
 
 static void juceLV2_selectProgram (LV2_Handle handle, uint32_t bank, uint32_t program)
 {
-    handlePtr->lv2SelectProgram(bank, program);
+    handlePtr->lv2SelectProgram (bank, program);
 }
 
 #if JucePlugin_WantsLV2State
 static LV2_State_Status juceLV2_SaveState (LV2_Handle handle, LV2_State_Store_Function store, LV2_State_Handle stateHandle,
                                            uint32_t, const LV2_Feature* const*)
 {
-    return handlePtr->lv2SaveState(store, stateHandle);
+    return handlePtr->lv2SaveState (store, stateHandle);
 }
 
 static LV2_State_Status juceLV2_RestoreState (LV2_Handle handle, LV2_State_Retrieve_Function retrieve, LV2_State_Handle stateHandle,
                                               uint32_t flags, const LV2_Feature* const*)
 {
-    return handlePtr->lv2RestoreState(retrieve, stateHandle, flags);
+    return handlePtr->lv2RestoreState (retrieve, stateHandle, flags);
 }
 #endif
 
@@ -1782,12 +1782,12 @@ static const void* juceLV2_ExtensionData (const char* uri)
     static const LV2_State_Interface state = { juceLV2_SaveState, juceLV2_RestoreState };
    #endif
 
-    if (strcmp(uri, LV2_OPTIONS__interface) == 0)
+    if (strcmp (uri, LV2_OPTIONS__interface) == 0)
         return &options;
-    if (strcmp(uri, LV2_PROGRAMS__Interface) == 0)
+    if (strcmp (uri, LV2_PROGRAMS__Interface) == 0)
         return &programs;
    #if JucePlugin_WantsLV2State
-    if (strcmp(uri, LV2_STATE__interface) == 0)
+    if (strcmp (uri, LV2_STATE__interface) == 0)
         return &state;
    #endif
 
@@ -1803,10 +1803,10 @@ static LV2UI_Handle juceLV2UI_Instantiate (LV2UI_Write_Function writeFunction, L
 {
     for (int i = 0; features[i] != nullptr; ++i)
     {
-        if (strcmp(features[i]->URI, LV2_INSTANCE_ACCESS_URI) == 0 && features[i]->data != nullptr)
+        if (strcmp (features[i]->URI, LV2_INSTANCE_ACCESS_URI) == 0 && features[i]->data != nullptr)
         {
-            JuceLv2Wrapper* wrapper = (JuceLv2Wrapper*)features[i]->data;
-            return wrapper->getUI(writeFunction, controller, widget, features, isExternal);
+            JuceLv2Wrapper* wrapper = (JuceLv2Wrapper*) features[i]->data;
+            return wrapper->getUI (writeFunction, controller, widget, features, isExternal);
         }
     }
 
@@ -1817,18 +1817,18 @@ static LV2UI_Handle juceLV2UI_Instantiate (LV2UI_Write_Function writeFunction, L
 static LV2UI_Handle juceLV2UI_InstantiateExternal (const LV2UI_Descriptor*, const char*, const char*, LV2UI_Write_Function writeFunction,
                                                    LV2UI_Controller controller, LV2UI_Widget* widget, const LV2_Feature* const* features)
 {
-    return juceLV2UI_Instantiate(writeFunction, controller, widget, features, true);
+    return juceLV2UI_Instantiate (writeFunction, controller, widget, features, true);
 }
 
 static LV2UI_Handle juceLV2UI_InstantiateParent (const LV2UI_Descriptor*, const char*, const char*, LV2UI_Write_Function writeFunction,
                                                  LV2UI_Controller controller, LV2UI_Widget* widget, const LV2_Feature* const* features)
 {
-    return juceLV2UI_Instantiate(writeFunction, controller, widget, features, false);
+    return juceLV2UI_Instantiate (writeFunction, controller, widget, features, false);
 }
 
 static void juceLV2UI_Cleanup (LV2UI_Handle handle)
 {
-    ((JuceLv2UIWrapper*)handle)->lv2Cleanup();
+    ((JuceLv2UIWrapper*) handle)->lv2Cleanup();
 }
 
 //==============================================================================
@@ -1836,14 +1836,14 @@ static void juceLV2UI_Cleanup (LV2UI_Handle handle)
 
 static int juceLV2UI_idle (LV2UI_Handle handle)
 {
-    return ((JuceLv2UIWrapper*)handle)->lv2Idle();
+    return ((JuceLv2UIWrapper*) handle)->lv2Idle();
 }
 
 static const void* juceLV2UI_ExtensionData (const char* uri)
 {
     static const LV2UI_Idle_Interface idle = { juceLV2UI_idle };
 
-    if (strcmp(uri, LV2_UI__idleInterface) == 0)
+    if (strcmp (uri, LV2_UI__idleInterface) == 0)
     {
        #if JUCE_LINUX
         JuceLv2UIWrapper::hostHasIdleInterface = true;
@@ -1859,7 +1859,7 @@ static const void* juceLV2UI_ExtensionData (const char* uri)
 // static LV2 Descriptor objects
 
 static const LV2_Descriptor JuceLv2Plugin = {
-    strdup(getPluginURI().toRawUTF8()),
+    strdup (getPluginURI().toRawUTF8()),
     juceLV2_Instantiate,
     juceLV2_ConnectPort,
     juceLV2_Activate,
@@ -1871,7 +1871,7 @@ static const LV2_Descriptor JuceLv2Plugin = {
 
 #if ! JUCE_AUDIOPROCESSOR_NO_GUI
 static const LV2UI_Descriptor JuceLv2UI_External = {
-    strdup(String(getPluginURI() + "#ExternalUI").toRawUTF8()),
+    strdup (String (getPluginURI() + "#ExternalUI").toRawUTF8()),
     juceLV2UI_InstantiateExternal,
     juceLV2UI_Cleanup,
     nullptr,
@@ -1879,7 +1879,7 @@ static const LV2UI_Descriptor JuceLv2UI_External = {
 };
 
 static const LV2UI_Descriptor JuceLv2UI_Parent = {
-    strdup(String(getPluginURI() + "#ParentUI").toRawUTF8()),
+    strdup (String (getPluginURI() + "#ParentUI").toRawUTF8()),
     juceLV2UI_InstantiateParent,
     juceLV2UI_Cleanup,
     nullptr,
@@ -1891,10 +1891,10 @@ static const struct DescriptorCleanup {
     DescriptorCleanup() {}
     ~DescriptorCleanup()
     {
-        free((void*)JuceLv2Plugin.URI);
+        free ((void*) JuceLv2Plugin.URI);
 #if ! JUCE_AUDIOPROCESSOR_NO_GUI
-        free((void*)JuceLv2UI_External.URI);
-        free((void*)JuceLv2UI_Parent.URI);
+        free ((void*) JuceLv2UI_External.URI);
+        free ((void*) JuceLv2UI_Parent.URI);
 #endif
     }
 } _descCleanup;
@@ -1902,7 +1902,7 @@ static const struct DescriptorCleanup {
 #if JUCE_WINDOWS
  #define JUCE_EXPORTED_FUNCTION extern "C" __declspec (dllexport)
 #else
- #define JUCE_EXPORTED_FUNCTION extern "C" __attribute__ ((visibility("default")))
+ #define JUCE_EXPORTED_FUNCTION extern "C" __attribute__ ((visibility ("default")))
 #endif
 
 //==============================================================================

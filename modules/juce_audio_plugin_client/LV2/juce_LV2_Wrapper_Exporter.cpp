@@ -43,16 +43,16 @@ static const String nameToSymbol (const String& name, const uint32 portIndex)
     if (trimmedName.isEmpty())
     {
         symbol += "lv2_port_";
-        symbol += String(portIndex+1);
+        symbol += String (portIndex+1);
     }
     else
     {
-        for (int i=0; i < trimmedName.length(); ++i)
+        for (int i = 0; i < trimmedName.length(); ++i)
         {
             const juce_wchar c = trimmedName[i];
-            if (i == 0 && std::isdigit(c))
+            if (i == 0 && std::isdigit (c))
                 symbol += "_";
-            else if (std::isalpha(c) || std::isdigit(c))
+            else if (std::isalpha (c) || std::isdigit (c))
                 symbol += c;
             else
                 symbol += "_";
@@ -60,21 +60,21 @@ static const String nameToSymbol (const String& name, const uint32 portIndex)
     }
 
     // Do not allow identical symbols
-    if (usedSymbols.contains(symbol))
+    if (usedSymbols.contains (symbol))
     {
         int offset = 2;
         String offsetStr = "_2";
         symbol += offsetStr;
 
-        while (usedSymbols.contains(symbol))
+        while (usedSymbols.contains (symbol))
         {
             offset += 1;
-            String newOffsetStr = "_" + String(offset);
-            symbol = symbol.replace(offsetStr, newOffsetStr);
+            String newOffsetStr = "_" + String (offset);
+            symbol = symbol.replace (offsetStr, newOffsetStr);
             offsetStr = newOffsetStr;
         }
     }
-    usedSymbols.add(symbol);
+    usedSymbols.add (symbol);
 
     return symbol;
 }
@@ -82,7 +82,7 @@ static const String nameToSymbol (const String& name, const uint32 portIndex)
 /** Prevents NaN or out of 0.0<->1.0 bounds parameter values. */
 static float safeParamValue (float value)
 {
-    if (std::isnan(value))
+    if (std::isnan (value))
         value = 0.0f;
     else if (value < 0.0f)
         value = 0.0f;
@@ -94,7 +94,7 @@ static float safeParamValue (float value)
 /** Create the manifest.ttl file contents */
 static const String makeManifestFile (AudioProcessor* const filter, const String& binary)
 {
-    const String& pluginURI(getPluginURI());
+    const String& pluginURI (getPluginURI());
     String text;
 
     // Header
@@ -140,15 +140,15 @@ static const String makeManifestFile (AudioProcessor* const filter, const String
 #endif
 
 #if JucePlugin_WantsLV2Presets
-    const String presetSeparator(pluginURI.contains("#") ? ":" : "#");
+    const String presetSeparator (pluginURI.contains ("#") ? ":" : "#");
 
     // Presets
     for (int i = 0; i < filter->getNumPrograms(); ++i)
     {
-        text += "<" + pluginURI + presetSeparator + "preset" + String::formatted("%03i", i+1) + ">\n";
+        text += "<" + pluginURI + presetSeparator + "preset" + String::formatted ("%03i", i+1) + ">\n";
         text += "    a pset:Preset ;\n";
         text += "    lv2:appliesTo <" + pluginURI + "> ;\n";
-        text += "    rdfs:label \"" + filter->getProgramName(i) + "\" ;\n";
+        text += "    rdfs:label \"" + filter->getProgramName (i) + "\" ;\n";
         text += "    rdfs:seeAlso <presets.ttl> .\n";
         text += "\n";
     }
@@ -160,7 +160,7 @@ static const String makeManifestFile (AudioProcessor* const filter, const String
 /** Create the -plugin-.ttl file contents */
 static const String makePluginFile (AudioProcessor* const filter, const int maxNumInputChannels, const int maxNumOutputChannels)
 {
-    const String& pluginURI(getPluginURI());
+    const String& pluginURI (getPluginURI());
     String text;
 
     // Header
@@ -200,8 +200,8 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
         if (majorVersion > 0)
             minorVersion += 2;
 
-        text += "    lv2:microVersion " + String(microVersion) + " ;\n";
-        text += "    lv2:minorVersion " + String(minorVersion) + " ;\n";
+        text += "    lv2:microVersion " + String (microVersion) + " ;\n";
+        text += "    lv2:minorVersion " + String (minorVersion) + " ;\n";
         text += "\n";
     }
 #endif
@@ -229,7 +229,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
  #if JucePlugin_WantsLV2TimePos
     text += "        atom:supports <" LV2_TIME__Position "> ;\n";
  #endif
-    text += "        lv2:index " + String(portIndex++) + " ;\n";
+    text += "        lv2:index " + String (portIndex++) + " ;\n";
     text += "        lv2:symbol \"lv2_events_in\" ;\n";
     text += "        lv2:name \"Events Input\" ;\n";
     text += "        lv2:designation lv2:control ;\n";
@@ -246,7 +246,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
     text += "        a lv2:OutputPort, atom:AtomPort ;\n";
     text += "        atom:bufferType atom:Sequence ;\n";
     text += "        atom:supports <" LV2_MIDI__MidiEvent "> ;\n";
-    text += "        lv2:index " + String(portIndex++) + " ;\n";
+    text += "        lv2:index " + String (portIndex++) + " ;\n";
     text += "        lv2:symbol \"lv2_midi_out\" ;\n";
     text += "        lv2:name \"MIDI Output\" ;\n";
     text += "    ] ;\n";
@@ -256,7 +256,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
     // Freewheel port
     text += "    lv2:port [\n";
     text += "        a lv2:InputPort, lv2:ControlPort ;\n";
-    text += "        lv2:index " + String(portIndex++) + " ;\n";
+    text += "        lv2:index " + String (portIndex++) + " ;\n";
     text += "        lv2:symbol \"lv2_freewheel\" ;\n";
     text += "        lv2:name \"Freewheel\" ;\n";
     text += "        lv2:default 0.0 ;\n";
@@ -271,7 +271,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
     // Latency port
     text += "    lv2:port [\n";
     text += "        a lv2:OutputPort, lv2:ControlPort ;\n";
-    text += "        lv2:index " + String(portIndex++) + " ;\n";
+    text += "        lv2:index " + String (portIndex++) + " ;\n";
     text += "        lv2:symbol \"lv2_latency\" ;\n";
     text += "        lv2:name \"Latency\" ;\n";
     text += "        lv2:designation <" LV2_CORE__latency "> ;\n";
@@ -281,7 +281,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
 #endif
 
     // Audio inputs
-    for (int i=0; i < maxNumInputChannels; ++i)
+    for (int i = 0; i < maxNumInputChannels; ++i)
     {
         if (i == 0)
             text += "    lv2:port [\n";
@@ -289,9 +289,9 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
             text += "    [\n";
 
         text += "        a lv2:InputPort, lv2:AudioPort ;\n";
-        text += "        lv2:index " + String(portIndex++) + " ;\n";
-        text += "        lv2:symbol \"lv2_audio_in_" + String(i+1) + "\" ;\n";
-        text += "        lv2:name \"Audio Input " + String(i+1) + "\" ;\n";
+        text += "        lv2:index " + String (portIndex++) + " ;\n";
+        text += "        lv2:symbol \"lv2_audio_in_" + String (i+1) + "\" ;\n";
+        text += "        lv2:name \"Audio Input " + String (i+1) + "\" ;\n";
 
         if (i+1 == maxNumInputChannels)
             text += "    ] ;\n\n";
@@ -300,7 +300,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
     }
 
     // Audio outputs
-    for (int i=0; i < maxNumOutputChannels; ++i)
+    for (int i = 0; i < maxNumOutputChannels; ++i)
     {
         if (i == 0)
             text += "    lv2:port [\n";
@@ -308,9 +308,9 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
             text += "    [\n";
 
         text += "        a lv2:OutputPort, lv2:AudioPort ;\n";
-        text += "        lv2:index " + String(portIndex++) + " ;\n";
-        text += "        lv2:symbol \"lv2_audio_out_" + String(i+1) + "\" ;\n";
-        text += "        lv2:name \"Audio Output " + String(i+1) + "\" ;\n";
+        text += "        lv2:index " + String (portIndex++) + " ;\n";
+        text += "        lv2:symbol \"lv2_audio_out_" + String (i+1) + "\" ;\n";
+        text += "        lv2:name \"Audio Output " + String (i+1) + "\" ;\n";
 
         if (i+1 == maxNumOutputChannels)
             text += "    ] ;\n\n";
@@ -320,7 +320,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
 
     // Parameters
     const auto& parameters = filter->getParameters();
-    for (int i=0; i < parameters.size(); ++i)
+    for (int i = 0; i < parameters.size(); ++i)
     {
         auto paramName = parameters[i]->getName (1024);
 
@@ -330,15 +330,15 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
             text += "    [\n";
 
         text += "        a lv2:InputPort, lv2:ControlPort ;\n";
-        text += "        lv2:index " + String(portIndex++) + " ;\n";
-        text += "        lv2:symbol \"" + nameToSymbol(paramName, i) + "\" ;\n";
+        text += "        lv2:index " + String (portIndex++) + " ;\n";
+        text += "        lv2:symbol \"" + nameToSymbol (paramName, i) + "\" ;\n";
 
         if (paramName.isNotEmpty())
             text += "        lv2:name \"" + paramName + "\" ;\n";
         else
-            text += "        lv2:name \"Port " + String(i+1) + "\" ;\n";
+            text += "        lv2:name \"Port " + String (i+1) + "\" ;\n";
 
-        text += "        lv2:default " + String::formatted("%f", safeParamValue(parameters[i]->getValue())) + " ;\n";
+        text += "        lv2:default " + String::formatted ("%f", safeParamValue (parameters[i]->getValue())) + " ;\n";
         text += "        lv2:minimum 0.0 ;\n";
         text += "        lv2:maximum 1.0 ;\n";
 
@@ -361,7 +361,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
 /** Create the presets.ttl file contents */
 static const String makePresetsFile (AudioProcessor* const filter)
 {
-    const String& pluginURI(getPluginURI());
+    const String& pluginURI (getPluginURI());
     String text;
 
     // Header
@@ -394,7 +394,7 @@ static const String makePresetsFile (AudioProcessor* const filter)
 
     // Presets
     const int numPrograms = filter->getNumPrograms();
-    const String presetSeparator(pluginURI.contains("#") ? ":" : "#");
+    const String presetSeparator (pluginURI.contains ("#") ? ":" : "#");
 
     for (int i = 0; i < numPrograms; ++i)
     {
@@ -404,8 +404,8 @@ static const String makePresetsFile (AudioProcessor* const filter)
         String preset;
 
         // Label
-        filter->setCurrentProgram(i);
-        preset += "<" + pluginURI + presetSeparator + "preset" + String::formatted("%03i", i+1) + "> a pset:Preset ;\n";
+        filter->setCurrentProgram (i);
+        preset += "<" + pluginURI + presetSeparator + "preset" + String::formatted ("%03i", i+1) + "> a pset:Preset ;\n";
 
         // State
 #if JucePlugin_WantsLV2State
@@ -413,12 +413,12 @@ static const String makePresetsFile (AudioProcessor* const filter)
  #if JucePlugin_WantsLV2StateString
         preset += "        <" JUCE_LV2_STATE_STRING_URI ">\n";
         preset += "\"\"\"\n";
-        preset += filter->getStateInformationString().replace("\r\n","\n");
+        preset += filter->getStateInformationString().replace ("\r\n","\n");
         preset += "\"\"\"\n";
  #else
         MemoryBlock chunkMemory;
-        filter->getCurrentProgramStateInformation(chunkMemory);
-        const String chunkString(Base64::toBase64(chunkMemory.getData(), chunkMemory.getSize()));
+        filter->getCurrentProgramStateInformation (chunkMemory);
+        const String chunkString (Base64::toBase64 (chunkMemory.getData(), chunkMemory.getSize()));
 
         preset += "        <" JUCE_LV2_STATE_BINARY_URI "> [\n";
         preset += "            a atom:Chunk ;\n";
@@ -438,15 +438,15 @@ static const String makePresetsFile (AudioProcessor* const filter)
         usedSymbols.clear();
 
         const auto& parameters = filter->getParameters();
-        for (int j=0; j < parameters.size(); ++j)
+        for (int j = 0; j < parameters.size(); ++j)
         {
               if (j == 0)
                 preset += "    lv2:port [\n";
             else
                 preset += "    [\n";
 
-            preset += "        lv2:symbol \"" + nameToSymbol(parameters[j]->getName (1024), j) + "\" ;\n";
-            preset += "        pset:value " + String::formatted("%f", safeParamValue(parameters[j]->getValue())) + " ;\n";
+            preset += "        lv2:symbol \"" + nameToSymbol (parameters[j]->getName (1024), j) + "\" ;\n";
+            preset += "        pset:value " + String::formatted ("%f", safeParamValue (parameters[j]->getValue())) + " ;\n";
 
             if (j+1 == filter->getParameters().size())
                 preset += "    ] ";
@@ -463,33 +463,33 @@ static const String makePresetsFile (AudioProcessor* const filter)
 #endif
 
 /** Creates manifest.ttl, plugin.ttl and presets.ttl files */
-static void createLv2Files(const char* basename)
+static void createLv2Files (const char* basename)
 {
     const ScopedJuceInitialiser_GUI juceInitialiser;
-    std::unique_ptr<AudioProcessor> filter(createPluginFilterOfType (AudioProcessor::wrapperType_LV2));
+    std::unique_ptr<AudioProcessor> filter (createPluginFilterOfType (AudioProcessor::wrapperType_LV2));
 
     int maxNumInputChannels, maxNumOutputChannels;
-    findMaxTotalChannels(filter, maxNumInputChannels, maxNumOutputChannels);
+    findMaxTotalChannels (filter, maxNumInputChannels, maxNumOutputChannels);
 
-    String binary(basename);
-    String binaryTTL(binary + ".ttl");
+    String binary (basename);
+    String binaryTTL (binary + ".ttl");
 
     std::cout << "Writing manifest.ttl..."; std::cout.flush();
-    std::fstream manifest("manifest.ttl", std::ios::out);
-    manifest << makeManifestFile(filter.get(), binary) << std::endl;
+    std::fstream manifest ("manifest.ttl", std::ios::out);
+    manifest << makeManifestFile (filter.get(), binary) << std::endl;
     manifest.close();
     std::cout << " done!" << std::endl;
 
     std::cout << "Writing " << binary << ".ttl..."; std::cout.flush();
-    std::fstream plugin(binaryTTL.toUTF8(), std::ios::out);
-    plugin << makePluginFile(filter.get(), maxNumInputChannels, maxNumOutputChannels) << std::endl;
+    std::fstream plugin (binaryTTL.toUTF8(), std::ios::out);
+    plugin << makePluginFile (filter.get(), maxNumInputChannels, maxNumOutputChannels) << std::endl;
     plugin.close();
     std::cout << " done!" << std::endl;
 
 #if JucePlugin_WantsLV2Presets
     std::cout << "Writing presets.ttl..."; std::cout.flush();
-    std::fstream presets("presets.ttl", std::ios::out);
-    presets << makePresetsFile(filter.get()) << std::endl;
+    std::fstream presets ("presets.ttl", std::ios::out);
+    presets << makePresetsFile (filter.get()) << std::endl;
     presets.close();
     std::cout << " done!" << std::endl;
 #endif
