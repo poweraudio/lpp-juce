@@ -1203,13 +1203,13 @@ public:
                             if (speed != nullptr)
                             {
                                 /**/ if (speed->type == uridAtomDouble)
-                                    lastPositionData.speed = ((LV2_Atom_Double*) speed)->body;
+                                    lastPositionData.speed = (reinterpret_cast<LV2_Atom_Double*> (speed))->body;
                                 else if (speed->type == uridAtomFloat)
-                                    lastPositionData.speed = ((LV2_Atom_Float*) speed)->body;
+                                    lastPositionData.speed = (reinterpret_cast<LV2_Atom_Float*> (speed))->body;
                                 else if (speed->type == uridAtomInt)
-                                    lastPositionData.speed = ((LV2_Atom_Int*) speed)->body;
+                                    lastPositionData.speed = (reinterpret_cast<LV2_Atom_Int*> (speed))->body;
                                 else if (speed->type == uridAtomLong)
-                                    lastPositionData.speed = (double) ((LV2_Atom_Long*) speed)->body;
+                                    lastPositionData.speed = (double) (reinterpret_cast<LV2_Atom_Long*> (speed))->body;
 
                                 curPosInfo.isPlaying = lastPositionData.speed != 0.0;
                             }
@@ -1217,37 +1217,37 @@ public:
                             if (bar != nullptr)
                             {
                                 /**/ if (bar->type == uridAtomDouble)
-                                    lastPositionData.bar = (int64_t) ((LV2_Atom_Double*) bar)->body;
+                                    lastPositionData.bar = (int64_t) (reinterpret_cast<LV2_Atom_Double*> (bar))->body;
                                 else if (bar->type == uridAtomFloat)
-                                    lastPositionData.bar = (int64_t) ((LV2_Atom_Float*) bar)->body;
+                                    lastPositionData.bar = (int64_t) (reinterpret_cast<LV2_Atom_Float*> (bar))->body;
                                 else if (bar->type == uridAtomInt)
-                                    lastPositionData.bar = ((LV2_Atom_Int*) bar)->body;
+                                    lastPositionData.bar = (reinterpret_cast<LV2_Atom_Int*> (bar))->body;
                                 else if (bar->type == uridAtomLong)
-                                    lastPositionData.bar = ((LV2_Atom_Long*) bar)->body;
+                                    lastPositionData.bar = (reinterpret_cast<LV2_Atom_Long*> (bar))->body;
                             }
 
                             if (barBeat != nullptr)
                             {
                                 /**/ if (barBeat->type == uridAtomDouble)
-                                    lastPositionData.barBeat = (float) ((LV2_Atom_Double*) barBeat)->body;
+                                    lastPositionData.barBeat = (float) (reinterpret_cast<LV2_Atom_Double*> (barBeat))->body;
                                 else if (barBeat->type == uridAtomFloat)
-                                    lastPositionData.barBeat = ((LV2_Atom_Float*) barBeat)->body;
+                                    lastPositionData.barBeat = (reinterpret_cast<LV2_Atom_Float*> (barBeat))->body;
                                 else if (barBeat->type == uridAtomInt)
-                                    lastPositionData.barBeat = (float) ((LV2_Atom_Int*) barBeat)->body;
+                                    lastPositionData.barBeat = (float) (reinterpret_cast<LV2_Atom_Int*> (barBeat))->body;
                                 else if (barBeat->type == uridAtomLong)
-                                    lastPositionData.barBeat = (float) ((LV2_Atom_Long*) barBeat)->body;
+                                    lastPositionData.barBeat = (float) (reinterpret_cast<LV2_Atom_Long*> (barBeat))->body;
                             }
 
                             if (beatUnit != nullptr)
                             {
                                 /**/ if (beatUnit->type == uridAtomDouble)
-                                    lastPositionData.beatUnit = (uint32_t) ((LV2_Atom_Double*) beatUnit)->body;
+                                    lastPositionData.beatUnit = (uint32_t) (reinterpret_cast<LV2_Atom_Double*> (beatUnit))->body;
                                 else if (beatUnit->type == uridAtomFloat)
-                                    lastPositionData.beatUnit = (uint32_t) ((LV2_Atom_Float*) beatUnit)->body;
+                                    lastPositionData.beatUnit = (uint32_t) (reinterpret_cast<LV2_Atom_Float*> (beatUnit))->body;
                                 else if (beatUnit->type == uridAtomInt)
-                                    lastPositionData.beatUnit = (uint32_t) ((LV2_Atom_Int*) beatUnit)->body;
+                                    lastPositionData.beatUnit = (uint32_t) (reinterpret_cast<LV2_Atom_Int*> (beatUnit))->body;
                                 else if (beatUnit->type == uridAtomLong)
-                                    lastPositionData.beatUnit = static_cast<uint32_t> (((LV2_Atom_Long*) beatUnit)->body);
+                                    lastPositionData.beatUnit = static_cast<uint32_t> ((reinterpret_cast<LV2_Atom_Long*> (beatUnit))->body);
 
                                 if (lastPositionData.beatUnit > 0)
                                     curPosInfo.timeSigDenominator = (int) lastPositionData.beatUnit;
@@ -1256,13 +1256,13 @@ public:
                             if (beatsPerBar != nullptr)
                             {
                                 /**/ if (beatsPerBar->type == uridAtomDouble)
-                                    lastPositionData.beatsPerBar = (float) ((LV2_Atom_Double*) beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = (float) (reinterpret_cast<LV2_Atom_Double*> (beatsPerBar))->body;
                                 else if (beatsPerBar->type == uridAtomFloat)
-                                    lastPositionData.beatsPerBar = ((LV2_Atom_Float*) beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = (reinterpret_cast<LV2_Atom_Float*> (beatsPerBar))->body;
                                 else if (beatsPerBar->type == uridAtomInt)
-                                    lastPositionData.beatsPerBar = (float) ((LV2_Atom_Int*) beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = (float) (reinterpret_cast<LV2_Atom_Int*> (beatsPerBar))->body;
                                 else if (beatsPerBar->type == uridAtomLong)
-                                    lastPositionData.beatsPerBar = (float) ((LV2_Atom_Long*) beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = (float) (reinterpret_cast<LV2_Atom_Long*> (beatsPerBar))->body;
 
                                 if (lastPositionData.beatsPerBar > 0.0f)
                                     curPosInfo.timeSigNumerator = (int) lastPositionData.beatsPerBar;
@@ -1271,13 +1271,13 @@ public:
                             if (beatsPerMinute != nullptr)
                             {
                                 /**/ if (beatsPerMinute->type == uridAtomDouble)
-                                    lastPositionData.beatsPerMinute = (float) ((LV2_Atom_Double*) beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = (float) (reinterpret_cast<LV2_Atom_Double*> (beatsPerMinute))->body;
                                 else if (beatsPerMinute->type == uridAtomFloat)
-                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Float*) beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = (reinterpret_cast<LV2_Atom_Float*> (beatsPerMinute))->body;
                                 else if (beatsPerMinute->type == uridAtomInt)
-                                    lastPositionData.beatsPerMinute = (float) ((LV2_Atom_Int*) beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = (float) (reinterpret_cast<LV2_Atom_Int*> (beatsPerMinute))->body;
                                 else if (beatsPerMinute->type == uridAtomLong)
-                                    lastPositionData.beatsPerMinute = (float) ((LV2_Atom_Long*) beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = (float) (reinterpret_cast<LV2_Atom_Long*> (beatsPerMinute))->body;
 
                                 if (lastPositionData.beatsPerMinute > 0.0f)
                                 {
@@ -1291,13 +1291,13 @@ public:
                             if (frame != nullptr)
                             {
                                 /**/ if (frame->type == uridAtomDouble)
-                                    lastPositionData.frame = (int64_t) ((LV2_Atom_Double*) frame)->body;
+                                    lastPositionData.frame = (int64_t) (reinterpret_cast<LV2_Atom_Double*> (frame))->body;
                                 else if (frame->type == uridAtomFloat)
-                                    lastPositionData.frame = (int64_t) ((LV2_Atom_Float*) frame)->body;
+                                    lastPositionData.frame = (int64_t) (reinterpret_cast<LV2_Atom_Float*> (frame))->body;
                                 else if (frame->type == uridAtomInt)
-                                    lastPositionData.frame = ((LV2_Atom_Int*) frame)->body;
+                                    lastPositionData.frame = (reinterpret_cast<LV2_Atom_Int*> (frame))->body;
                                 else if (frame->type == uridAtomLong)
-                                    lastPositionData.frame = ((LV2_Atom_Long*) frame)->body;
+                                    lastPositionData.frame = (reinterpret_cast<LV2_Atom_Long*> (frame))->body;
 
                                 if (lastPositionData.frame >= 0)
                                 {
@@ -1908,14 +1908,12 @@ static const struct DescriptorCleanup {
 //==============================================================================
 // startup code..
 
-JUCE_EXPORTED_FUNCTION const LV2_Descriptor* lv2_descriptor (uint32 index);
 JUCE_EXPORTED_FUNCTION const LV2_Descriptor* lv2_descriptor (uint32 index)
 {
     return (index == 0) ? &JuceLv2Plugin : nullptr;
 }
 
 #if ! JUCE_AUDIOPROCESSOR_NO_GUI
-JUCE_EXPORTED_FUNCTION const LV2UI_Descriptor* lv2ui_descriptor (uint32 index);
 JUCE_EXPORTED_FUNCTION const LV2UI_Descriptor* lv2ui_descriptor (uint32 index)
 {
     switch (index)
