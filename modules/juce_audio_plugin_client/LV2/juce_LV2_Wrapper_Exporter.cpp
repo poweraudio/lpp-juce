@@ -331,7 +331,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
 
         text += "        a lv2:InputPort, lv2:ControlPort ;\n";
         text += "        lv2:index " + String (portIndex++) + " ;\n";
-        text += "        lv2:symbol \"" + nameToSymbol (paramName, i) + "\" ;\n";
+        text += "        lv2:symbol \"" + nameToSymbol (paramName, (unsigned int) i) + "\" ;\n";
 
         if (paramName.isNotEmpty())
             text += "        lv2:name \"" + paramName + "\" ;\n";
@@ -445,7 +445,7 @@ static const String makePresetsFile (AudioProcessor* const filter)
             else
                 preset += "    [\n";
 
-            preset += "        lv2:symbol \"" + nameToSymbol (parameters[j]->getName (1024), j) + "\" ;\n";
+            preset += "        lv2:symbol \"" + nameToSymbol (parameters[j]->getName (1024), (unsigned int) j) + "\" ;\n";
             preset += "        pset:value " + String::formatted ("%f", safeParamValue (parameters[j]->getValue())) + " ;\n";
 
             if (j+1 == filter->getParameters().size())

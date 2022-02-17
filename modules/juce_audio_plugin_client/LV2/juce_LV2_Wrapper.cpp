@@ -142,7 +142,7 @@ public:
             sleep (1);
     }
 
-    ~SharedMessageThread()
+    ~SharedMessageThread() override
     {
         MessageManager::getInstance()->stopDispatchLoop();
         waitForThreadToExit (5000);
@@ -222,7 +222,7 @@ private:
     bool closed;
     Point<int> lastPos;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceLv2ExternalUIWindow);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceLv2ExternalUIWindow)
 };
 
 //==============================================================================
@@ -322,7 +322,7 @@ public:
 private:
     JuceLv2ExternalUIWindow window;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceLv2ExternalUIWrapper);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceLv2ExternalUIWrapper)
 };
 
 //==============================================================================
@@ -362,7 +362,7 @@ public:
         const int ch = child->getHeight();
 
        #if JUCE_LINUX
-        X11Symbols::getInstance()->xResizeWindow (display, (Window) getWindowHandle(), cw, ch);
+        X11Symbols::getInstance()->xResizeWindow (display, (Window) getWindowHandle(), (unsigned int) cw, (unsigned int) ch);
        #else
         setSize (cw, ch);
        #endif
@@ -377,7 +377,7 @@ private:
    #endif
     SizeListener* const sizeListener;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceLv2ParentContainer);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceLv2ParentContainer)
 };
 
 static ThreadLocalValue<bool> inParameterChangedCallback;
@@ -474,12 +474,12 @@ public:
 #if JucePlugin_WantsLV2Latency
         controlPortOffset += 1;
 #endif
-        controlPortOffset += numInChans + numOutChans;
+        controlPortOffset += (unsigned int) (numInChans + numOutChans);
 
         lastProgramCount = filter->getNumPrograms();
     }
 
-    ~JuceLv2UIWrapper()
+    ~JuceLv2UIWrapper() override
     {
         PopupMenu::dismissAllActiveMenus();
 
@@ -546,16 +546,16 @@ public:
             switch (msg.type)
             {
             case IdleMessage::kMessageParameterChanged:
-                writeFunction (controller, msg.index + controlPortOffset, sizeof (float), 0, &msg.valuef);
+                writeFunction (controller, (unsigned int) msg.index + controlPortOffset, sizeof (float), 0, &msg.valuef);
                 break;
             case IdleMessage::kMessageSizeChanged:
                 uiResize->ui_resize (uiResize->handle, msg.index, msg.valuei);
                 break;
             case IdleMessage::kMessageGestureBegin:
-                uiTouch->touch (uiTouch->handle, msg.index + controlPortOffset, true);
+                uiTouch->touch (uiTouch->handle, (unsigned int) msg.index + controlPortOffset, true);
                 break;
             case IdleMessage::kMessageGestureEnd:
-                uiTouch->touch (uiTouch->handle, msg.index + controlPortOffset, false);
+                uiTouch->touch (uiTouch->handle, (unsigned int) msg.index + controlPortOffset, false);
                 break;
             }
         }
@@ -588,7 +588,7 @@ public:
         else
        #endif
         {
-            writeFunction (controller, index + controlPortOffset, sizeof (float), 0, &newValue);
+            writeFunction (controller, (unsigned int) index + controlPortOffset, sizeof (float), 0, &newValue);
         }
     }
 
@@ -621,7 +621,7 @@ public:
         else
        #endif
         {
-            uiTouch->touch (uiTouch->handle, parameterIndex + controlPortOffset, true);
+            uiTouch->touch (uiTouch->handle, (unsigned int) parameterIndex + controlPortOffset, true);
         }
     }
 
@@ -640,7 +640,7 @@ public:
         else
        #endif
         {
-            uiTouch->touch (uiTouch->handle, parameterIndex + controlPortOffset, false);
+            uiTouch->touch (uiTouch->handle, (unsigned int) parameterIndex + controlPortOffset, false);
         }
     }
 
@@ -948,7 +948,7 @@ public:
                         {
                             if (options[j].type == uridAtomInt)
                             {
-                                bufferSize = *(int*) options[j].value;
+                                bufferSize = *(unsigned int*) options[j].value;
                                 usingNominalBlockLength = true;
                             }
                             else
@@ -961,7 +961,7 @@ public:
                         if (options[j].key == uridMap->map (uridMap->handle, LV2_BUF_SIZE__maxBlockLength))
                         {
                             if (options[j].type == uridAtomInt)
-                                bufferSize = *(int*) options[j].value;
+                                bufferSize = *(unsigned int*) options[j].value;
                             else
                                 std::cerr << "Host provides maxBlockLength but has wrong value type" << std::endl;
 
@@ -1063,8 +1063,8 @@ public:
     {
         jassert (filter != nullptr);
 
-        filter->prepareToPlay (sampleRate, bufferSize);
-        filter->setPlayConfigDetails (numInChans, numOutChans, sampleRate, bufferSize);
+        filter->prepareToPlay (sampleRate, (int) bufferSize);
+        filter->setPlayConfigDetails (numInChans, numOutChans, sampleRate, (int) bufferSize);
 
         channels.calloc (numInChans + numOutChans);
 
@@ -1089,7 +1089,7 @@ public:
 
 #if JucePlugin_WantsLV2Latency
         if (portLatency != nullptr)
-            *portLatency = filter->getLatencySamples();
+            *portLatency = (float) filter->getLatencySamples();
 #endif
 
         if (portFreewheel != nullptr)
@@ -1209,7 +1209,7 @@ public:
                                 else if (speed->type == uridAtomInt)
                                     lastPositionData.speed = ((LV2_Atom_Int*) speed)->body;
                                 else if (speed->type == uridAtomLong)
-                                    lastPositionData.speed = ((LV2_Atom_Long*) speed)->body;
+                                    lastPositionData.speed = (double) ((LV2_Atom_Long*) speed)->body;
 
                                 curPosInfo.isPlaying = lastPositionData.speed != 0.0;
                             }
@@ -1217,9 +1217,9 @@ public:
                             if (bar != nullptr)
                             {
                                 /**/ if (bar->type == uridAtomDouble)
-                                    lastPositionData.bar = ((LV2_Atom_Double*) bar)->body;
+                                    lastPositionData.bar = (int64_t) ((LV2_Atom_Double*) bar)->body;
                                 else if (bar->type == uridAtomFloat)
-                                    lastPositionData.bar = ((LV2_Atom_Float*) bar)->body;
+                                    lastPositionData.bar = (int64_t) ((LV2_Atom_Float*) bar)->body;
                                 else if (bar->type == uridAtomInt)
                                     lastPositionData.bar = ((LV2_Atom_Int*) bar)->body;
                                 else if (bar->type == uridAtomLong)
@@ -1229,55 +1229,55 @@ public:
                             if (barBeat != nullptr)
                             {
                                 /**/ if (barBeat->type == uridAtomDouble)
-                                    lastPositionData.barBeat = ((LV2_Atom_Double*) barBeat)->body;
+                                    lastPositionData.barBeat = (float) ((LV2_Atom_Double*) barBeat)->body;
                                 else if (barBeat->type == uridAtomFloat)
                                     lastPositionData.barBeat = ((LV2_Atom_Float*) barBeat)->body;
                                 else if (barBeat->type == uridAtomInt)
-                                    lastPositionData.barBeat = ((LV2_Atom_Int*) barBeat)->body;
+                                    lastPositionData.barBeat = (float) ((LV2_Atom_Int*) barBeat)->body;
                                 else if (barBeat->type == uridAtomLong)
-                                    lastPositionData.barBeat = ((LV2_Atom_Long*) barBeat)->body;
+                                    lastPositionData.barBeat = (float) ((LV2_Atom_Long*) barBeat)->body;
                             }
 
                             if (beatUnit != nullptr)
                             {
                                 /**/ if (beatUnit->type == uridAtomDouble)
-                                    lastPositionData.beatUnit = ((LV2_Atom_Double*) beatUnit)->body;
+                                    lastPositionData.beatUnit = (uint32_t) ((LV2_Atom_Double*) beatUnit)->body;
                                 else if (beatUnit->type == uridAtomFloat)
-                                    lastPositionData.beatUnit = ((LV2_Atom_Float*) beatUnit)->body;
+                                    lastPositionData.beatUnit = (uint32_t) ((LV2_Atom_Float*) beatUnit)->body;
                                 else if (beatUnit->type == uridAtomInt)
-                                    lastPositionData.beatUnit = ((LV2_Atom_Int*) beatUnit)->body;
+                                    lastPositionData.beatUnit = (uint32_t) ((LV2_Atom_Int*) beatUnit)->body;
                                 else if (beatUnit->type == uridAtomLong)
                                     lastPositionData.beatUnit = static_cast<uint32_t> (((LV2_Atom_Long*) beatUnit)->body);
 
                                 if (lastPositionData.beatUnit > 0)
-                                    curPosInfo.timeSigDenominator = lastPositionData.beatUnit;
+                                    curPosInfo.timeSigDenominator = (int) lastPositionData.beatUnit;
                             }
 
                             if (beatsPerBar != nullptr)
                             {
                                 /**/ if (beatsPerBar->type == uridAtomDouble)
-                                    lastPositionData.beatsPerBar = ((LV2_Atom_Double*) beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = (float) ((LV2_Atom_Double*) beatsPerBar)->body;
                                 else if (beatsPerBar->type == uridAtomFloat)
                                     lastPositionData.beatsPerBar = ((LV2_Atom_Float*) beatsPerBar)->body;
                                 else if (beatsPerBar->type == uridAtomInt)
-                                    lastPositionData.beatsPerBar = ((LV2_Atom_Int*) beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = (float) ((LV2_Atom_Int*) beatsPerBar)->body;
                                 else if (beatsPerBar->type == uridAtomLong)
-                                    lastPositionData.beatsPerBar = ((LV2_Atom_Long*) beatsPerBar)->body;
+                                    lastPositionData.beatsPerBar = (float) ((LV2_Atom_Long*) beatsPerBar)->body;
 
                                 if (lastPositionData.beatsPerBar > 0.0f)
-                                    curPosInfo.timeSigNumerator = lastPositionData.beatsPerBar;
+                                    curPosInfo.timeSigNumerator = (int) lastPositionData.beatsPerBar;
                             }
 
                             if (beatsPerMinute != nullptr)
                             {
                                 /**/ if (beatsPerMinute->type == uridAtomDouble)
-                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Double*) beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = (float) ((LV2_Atom_Double*) beatsPerMinute)->body;
                                 else if (beatsPerMinute->type == uridAtomFloat)
                                     lastPositionData.beatsPerMinute = ((LV2_Atom_Float*) beatsPerMinute)->body;
                                 else if (beatsPerMinute->type == uridAtomInt)
-                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Int*) beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = (float) ((LV2_Atom_Int*) beatsPerMinute)->body;
                                 else if (beatsPerMinute->type == uridAtomLong)
-                                    lastPositionData.beatsPerMinute = ((LV2_Atom_Long*) beatsPerMinute)->body;
+                                    lastPositionData.beatsPerMinute = (float) ((LV2_Atom_Long*) beatsPerMinute)->body;
 
                                 if (lastPositionData.beatsPerMinute > 0.0f)
                                 {
@@ -1291,9 +1291,9 @@ public:
                             if (frame != nullptr)
                             {
                                 /**/ if (frame->type == uridAtomDouble)
-                                    lastPositionData.frame = ((LV2_Atom_Double*) frame)->body;
+                                    lastPositionData.frame = (int64_t) ((LV2_Atom_Double*) frame)->body;
                                 else if (frame->type == uridAtomFloat)
-                                    lastPositionData.frame = ((LV2_Atom_Float*) frame)->body;
+                                    lastPositionData.frame = (int64_t) ((LV2_Atom_Float*) frame)->body;
                                 else if (frame->type == uridAtomInt)
                                     lastPositionData.frame = ((LV2_Atom_Int*) frame)->body;
                                 else if (frame->type == uridAtomLong)
@@ -1308,7 +1308,7 @@ public:
 
                             if (lastPositionData.bar >= 0 && lastPositionData.beatsPerBar > 0.0f)
                             {
-                                curPosInfo.ppqPositionOfLastBarStart = lastPositionData.bar * lastPositionData.beatsPerBar;
+                                curPosInfo.ppqPositionOfLastBarStart = (float) lastPositionData.bar * lastPositionData.beatsPerBar;
 
                                 if (lastPositionData.barBeat >= 0.0f)
                                     curPosInfo.ppqPosition = curPosInfo.ppqPositionOfLastBarStart + lastPositionData.barBeat;
@@ -1323,7 +1323,7 @@ public:
                 }
 #endif
                 {
-                    AudioSampleBuffer chans (channels, jmax (numInChans, numOutChans), sampleCount);
+                    AudioSampleBuffer chans (channels, jmax (numInChans, numOutChans), (int) sampleCount);
                     filter->processBlock (chans, midiEvents);
                 }
             }
@@ -1358,15 +1358,15 @@ public:
 
                 if (lastPositionData.bar >= 0 && lastPositionData.barBeat >= 0.0f)
                 {
-                    lastPositionData.bar    += std::floor ((lastPositionData.barBeat+addedBarBeats)/
+                    lastPositionData.bar    += (int64_t) std::floor ((lastPositionData.barBeat+addedBarBeats)/
                                                            lastPositionData.beatsPerBar);
-                    lastPositionData.barBeat = std::fmod (lastPositionData.barBeat+addedBarBeats,
+                    lastPositionData.barBeat = (float) std::fmod (lastPositionData.barBeat+addedBarBeats,
                                                          lastPositionData.beatsPerBar);
 
                     if (lastPositionData.bar < 0)
                         lastPositionData.bar = 0;
 
-                    curPosInfo.ppqPositionOfLastBarStart = lastPositionData.bar * lastPositionData.beatsPerBar;
+                    curPosInfo.ppqPositionOfLastBarStart = (float) lastPositionData.bar * lastPositionData.beatsPerBar;
                     curPosInfo.ppqPosition = curPosInfo.ppqPositionOfLastBarStart + lastPositionData.barBeat;
                 }
 
@@ -1440,14 +1440,14 @@ public:
             if (options[i].key == uridMap->map (uridMap->handle, LV2_BUF_SIZE__nominalBlockLength))
             {
                 if (options[i].type == uridAtomInt)
-                    bufferSize = *(const int32_t*) options[i].value;
+                    bufferSize = *(const unsigned int*) options[i].value;
                 else
                     std::cerr << "Host changed nominalBlockLength but with wrong value type" << std::endl;
             }
             else if (options[i].key == uridMap->map (uridMap->handle, LV2_BUF_SIZE__maxBlockLength) && ! usingNominalBlockLength)
             {
                 if (options[i].type == uridAtomInt)
-                    bufferSize = *(const int32_t*) options[i].value;
+                    bufferSize = *(const unsigned int*) options[i].value;
                 else
                     std::cerr << "Host changed maxBlockLength but with wrong value type" << std::endl;
             }
@@ -1477,7 +1477,7 @@ public:
         {
             progDesc.bank    = index / 128;
             progDesc.program = index % 128;
-            progDesc.name    = strdup (filter->getProgramName (index).toUTF8());
+            progDesc.name    = strdup (filter->getProgramName ((int) index).toUTF8());
             return &progDesc;
         }
 
@@ -1488,7 +1488,7 @@ public:
     {
         jassert (filter != nullptr);
 
-        int realProgram = bank * 128 + program;
+        int realProgram = (int) (bank * 128 + program);
 
         if (realProgram < filter->getNumPrograms())
         {
