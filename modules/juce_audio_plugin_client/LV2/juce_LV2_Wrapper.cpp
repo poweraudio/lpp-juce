@@ -362,7 +362,7 @@ public:
         const int ch = child->getHeight();
 
        #if JUCE_LINUX
-        X11Symbols::getInstance()->xResizeWindow (display, (Window) getWindowHandle(), (unsigned int) cw, (unsigned int) ch);
+        X11Symbols::getInstance()->xResizeWindow (display, reinterpret_cast<Window> (getWindowHandle()), static_cast<unsigned int> (cw), static_cast<unsigned int> (ch));
        #else
         setSize (cw, ch);
        #endif
@@ -474,7 +474,7 @@ public:
 #if JucePlugin_WantsLV2Latency
         controlPortOffset += 1;
 #endif
-        controlPortOffset += (unsigned int) (numInChans + numOutChans);
+        controlPortOffset += static_cast<unsigned int> (numInChans + numOutChans);
 
         lastProgramCount = filter->getNumPrograms();
     }
@@ -546,16 +546,16 @@ public:
             switch (msg.type)
             {
             case IdleMessage::kMessageParameterChanged:
-                writeFunction (controller, (unsigned int) msg.index + controlPortOffset, sizeof (float), 0, &msg.valuef);
+                writeFunction (controller, static_cast<unsigned int> (msg.index) + controlPortOffset, sizeof (float), 0, &msg.valuef);
                 break;
             case IdleMessage::kMessageSizeChanged:
                 uiResize->ui_resize (uiResize->handle, msg.index, msg.valuei);
                 break;
             case IdleMessage::kMessageGestureBegin:
-                uiTouch->touch (uiTouch->handle, (unsigned int) msg.index + controlPortOffset, true);
+                uiTouch->touch (uiTouch->handle, static_cast<unsigned int> (msg.index) + controlPortOffset, true);
                 break;
             case IdleMessage::kMessageGestureEnd:
-                uiTouch->touch (uiTouch->handle, (unsigned int) msg.index + controlPortOffset, false);
+                uiTouch->touch (uiTouch->handle, static_cast<unsigned int> (msg.index) + controlPortOffset, false);
                 break;
             }
         }
@@ -588,7 +588,7 @@ public:
         else
        #endif
         {
-            writeFunction (controller, (unsigned int) index + controlPortOffset, sizeof (float), 0, &newValue);
+            writeFunction (controller, static_cast<unsigned int> (index) + controlPortOffset, sizeof (float), 0, &newValue);
         }
     }
 
@@ -621,7 +621,7 @@ public:
         else
        #endif
         {
-            uiTouch->touch (uiTouch->handle, (unsigned int) parameterIndex + controlPortOffset, true);
+            uiTouch->touch (uiTouch->handle, static_cast<unsigned int> (parameterIndex) + controlPortOffset, true);
         }
     }
 
@@ -640,7 +640,7 @@ public:
         else
        #endif
         {
-            uiTouch->touch (uiTouch->handle, (unsigned int) parameterIndex + controlPortOffset, false);
+            uiTouch->touch (uiTouch->handle, static_cast<unsigned int> (parameterIndex) + controlPortOffset, false);
         }
     }
 
@@ -817,8 +817,8 @@ private:
             parentContainer->addToDesktop (ComponentPeer::windowIsResizable, parent);
 
            #if JUCE_LINUX
-            Window hostWindow = (Window) parent;
-            Window editorWnd  = (Window) parentContainer->getWindowHandle();
+            Window hostWindow = reinterpret_cast<Window> (parent);
+            Window editorWnd  = reinterpret_cast<Window> (parentContainer->getWindowHandle());
             X11Symbols::getInstance()->xReparentWindow (display, editorWnd, hostWindow, 0, 0);
            #endif
 
@@ -948,7 +948,7 @@ public:
                         {
                             if (options[j].type == uridAtomInt)
                             {
-                                bufferSize = *(unsigned int*) options[j].value;
+                                bufferSize = *static_cast<unsigned int*> ((const_cast<void*> (options[j].value)));
                                 usingNominalBlockLength = true;
                             }
                             else
@@ -961,7 +961,7 @@ public:
                         if (options[j].key == uridMap->map (uridMap->handle, LV2_BUF_SIZE__maxBlockLength))
                         {
                             if (options[j].type == uridAtomInt)
-                                bufferSize = *(unsigned int*) options[j].value;
+                                bufferSize = *static_cast<unsigned int*> ((const_cast<void*> (options[j].value)));
                             else
                                 std::cerr << "Host provides maxBlockLength but has wrong value type" << std::endl;
 
@@ -1019,14 +1019,14 @@ public:
 
         if (portId == index++)
         {
-            portFreewheel = (float*) dataLocation;
+            portFreewheel = static_cast<float*> (dataLocation);
             return;
         }
 
 #if JucePlugin_WantsLV2Latency
         if (portId == index++)
         {
-            portLatency = (float*) dataLocation;
+            portLatency = static_cast<float*> (dataLocation);
             return;
         }
 #endif
@@ -1035,7 +1035,7 @@ public:
         {
             if (portId == index++)
             {
-                portAudioIns.set (i, (float*) dataLocation);
+                portAudioIns.set (i, static_cast<float*> (dataLocation));
                 return;
             }
         }
@@ -1044,7 +1044,7 @@ public:
         {
             if (portId == index++)
             {
-                portAudioOuts.set (i, (float*) dataLocation);
+                portAudioOuts.set (i, static_cast<float*> (dataLocation));
                 return;
             }
         }
@@ -1053,7 +1053,7 @@ public:
         {
             if (portId == index++)
             {
-                portControls.set (i, (float*) dataLocation);
+                portControls.set (i, static_cast<float*> (dataLocation));
                 return;
             }
         }
@@ -1063,8 +1063,8 @@ public:
     {
         jassert (filter != nullptr);
 
-        filter->prepareToPlay (sampleRate, (int) bufferSize);
-        filter->setPlayConfigDetails (numInChans, numOutChans, sampleRate, (int) bufferSize);
+        filter->prepareToPlay (sampleRate, static_cast<int> (bufferSize));
+        filter->setPlayConfigDetails (numInChans, numOutChans, sampleRate, static_cast<int> (bufferSize));
 
         channels.calloc (numInChans + numOutChans);
 
@@ -1089,7 +1089,7 @@ public:
 
 #if JucePlugin_WantsLV2Latency
         if (portLatency != nullptr)
-            *portLatency = (float) filter->getLatencySamples();
+            *portLatency = static_cast<float> (filter->getLatencySamples());
 #endif
 
         if (portFreewheel != nullptr)
@@ -1209,7 +1209,7 @@ public:
                                 else if (speed->type == uridAtomInt)
                                     lastPositionData.speed = (reinterpret_cast<LV2_Atom_Int*> (speed))->body;
                                 else if (speed->type == uridAtomLong)
-                                    lastPositionData.speed = (double) (reinterpret_cast<LV2_Atom_Long*> (speed))->body;
+                                    lastPositionData.speed = static_cast<double> ((reinterpret_cast<LV2_Atom_Long*> (speed))->body);
 
                                 curPosInfo.isPlaying = lastPositionData.speed != 0.0;
                             }
@@ -1217,9 +1217,9 @@ public:
                             if (bar != nullptr)
                             {
                                 /**/ if (bar->type == uridAtomDouble)
-                                    lastPositionData.bar = (int64_t) (reinterpret_cast<LV2_Atom_Double*> (bar))->body;
+                                    lastPositionData.bar = static_cast<int64_t> ((reinterpret_cast<LV2_Atom_Double*> (bar))->body);
                                 else if (bar->type == uridAtomFloat)
-                                    lastPositionData.bar = (int64_t) (reinterpret_cast<LV2_Atom_Float*> (bar))->body;
+                                    lastPositionData.bar = static_cast<int64_t> ((reinterpret_cast<LV2_Atom_Float*> (bar))->body);
                                 else if (bar->type == uridAtomInt)
                                     lastPositionData.bar = (reinterpret_cast<LV2_Atom_Int*> (bar))->body;
                                 else if (bar->type == uridAtomLong)
@@ -1229,55 +1229,55 @@ public:
                             if (barBeat != nullptr)
                             {
                                 /**/ if (barBeat->type == uridAtomDouble)
-                                    lastPositionData.barBeat = (float) (reinterpret_cast<LV2_Atom_Double*> (barBeat))->body;
+                                    lastPositionData.barBeat = static_cast<float> ((reinterpret_cast<LV2_Atom_Double*> (barBeat))->body);
                                 else if (barBeat->type == uridAtomFloat)
                                     lastPositionData.barBeat = (reinterpret_cast<LV2_Atom_Float*> (barBeat))->body;
                                 else if (barBeat->type == uridAtomInt)
-                                    lastPositionData.barBeat = (float) (reinterpret_cast<LV2_Atom_Int*> (barBeat))->body;
+                                    lastPositionData.barBeat = static_cast<float> ((reinterpret_cast<LV2_Atom_Int*> (barBeat))->body);
                                 else if (barBeat->type == uridAtomLong)
-                                    lastPositionData.barBeat = (float) (reinterpret_cast<LV2_Atom_Long*> (barBeat))->body;
+                                    lastPositionData.barBeat = static_cast<float> ((reinterpret_cast<LV2_Atom_Long*> (barBeat))->body);
                             }
 
                             if (beatUnit != nullptr)
                             {
                                 /**/ if (beatUnit->type == uridAtomDouble)
-                                    lastPositionData.beatUnit = (uint32_t) (reinterpret_cast<LV2_Atom_Double*> (beatUnit))->body;
+                                    lastPositionData.beatUnit = static_cast<uint32_t> ((reinterpret_cast<LV2_Atom_Double*> (beatUnit))->body);
                                 else if (beatUnit->type == uridAtomFloat)
-                                    lastPositionData.beatUnit = (uint32_t) (reinterpret_cast<LV2_Atom_Float*> (beatUnit))->body;
+                                    lastPositionData.beatUnit = static_cast<uint32_t> ((reinterpret_cast<LV2_Atom_Float*> (beatUnit))->body);
                                 else if (beatUnit->type == uridAtomInt)
-                                    lastPositionData.beatUnit = (uint32_t) (reinterpret_cast<LV2_Atom_Int*> (beatUnit))->body;
+                                    lastPositionData.beatUnit = static_cast<uint32_t> ((reinterpret_cast<LV2_Atom_Int*> (beatUnit))->body);
                                 else if (beatUnit->type == uridAtomLong)
                                     lastPositionData.beatUnit = static_cast<uint32_t> ((reinterpret_cast<LV2_Atom_Long*> (beatUnit))->body);
 
                                 if (lastPositionData.beatUnit > 0)
-                                    curPosInfo.timeSigDenominator = (int) lastPositionData.beatUnit;
+                                    curPosInfo.timeSigDenominator = static_cast<int> (lastPositionData.beatUnit);
                             }
 
                             if (beatsPerBar != nullptr)
                             {
                                 /**/ if (beatsPerBar->type == uridAtomDouble)
-                                    lastPositionData.beatsPerBar = (float) (reinterpret_cast<LV2_Atom_Double*> (beatsPerBar))->body;
+                                    lastPositionData.beatsPerBar = static_cast<float> ((reinterpret_cast<LV2_Atom_Double*> (beatsPerBar))->body);
                                 else if (beatsPerBar->type == uridAtomFloat)
                                     lastPositionData.beatsPerBar = (reinterpret_cast<LV2_Atom_Float*> (beatsPerBar))->body;
                                 else if (beatsPerBar->type == uridAtomInt)
-                                    lastPositionData.beatsPerBar = (float) (reinterpret_cast<LV2_Atom_Int*> (beatsPerBar))->body;
+                                    lastPositionData.beatsPerBar = static_cast<float> ((reinterpret_cast<LV2_Atom_Int*> (beatsPerBar))->body);
                                 else if (beatsPerBar->type == uridAtomLong)
-                                    lastPositionData.beatsPerBar = (float) (reinterpret_cast<LV2_Atom_Long*> (beatsPerBar))->body;
+                                    lastPositionData.beatsPerBar = static_cast<float> ((reinterpret_cast<LV2_Atom_Long*> (beatsPerBar))->body);
 
                                 if (lastPositionData.beatsPerBar > 0.0f)
-                                    curPosInfo.timeSigNumerator = (int) lastPositionData.beatsPerBar;
+                                    curPosInfo.timeSigNumerator = static_cast<int> (lastPositionData.beatsPerBar);
                             }
 
                             if (beatsPerMinute != nullptr)
                             {
                                 /**/ if (beatsPerMinute->type == uridAtomDouble)
-                                    lastPositionData.beatsPerMinute = (float) (reinterpret_cast<LV2_Atom_Double*> (beatsPerMinute))->body;
+                                    lastPositionData.beatsPerMinute = static_cast<float> ((reinterpret_cast<LV2_Atom_Double*> (beatsPerMinute))->body);
                                 else if (beatsPerMinute->type == uridAtomFloat)
                                     lastPositionData.beatsPerMinute = (reinterpret_cast<LV2_Atom_Float*> (beatsPerMinute))->body;
                                 else if (beatsPerMinute->type == uridAtomInt)
-                                    lastPositionData.beatsPerMinute = (float) (reinterpret_cast<LV2_Atom_Int*> (beatsPerMinute))->body;
+                                    lastPositionData.beatsPerMinute = static_cast<float> ((reinterpret_cast<LV2_Atom_Int*> (beatsPerMinute))->body);
                                 else if (beatsPerMinute->type == uridAtomLong)
-                                    lastPositionData.beatsPerMinute = (float) (reinterpret_cast<LV2_Atom_Long*> (beatsPerMinute))->body;
+                                    lastPositionData.beatsPerMinute = static_cast<float> ((reinterpret_cast<LV2_Atom_Long*> (beatsPerMinute))->body);
 
                                 if (lastPositionData.beatsPerMinute > 0.0f)
                                 {
@@ -1291,9 +1291,9 @@ public:
                             if (frame != nullptr)
                             {
                                 /**/ if (frame->type == uridAtomDouble)
-                                    lastPositionData.frame = (int64_t) (reinterpret_cast<LV2_Atom_Double*> (frame))->body;
+                                    lastPositionData.frame = static_cast<int64_t> ((reinterpret_cast<LV2_Atom_Double*> (frame))->body);
                                 else if (frame->type == uridAtomFloat)
-                                    lastPositionData.frame = (int64_t) (reinterpret_cast<LV2_Atom_Float*> (frame))->body;
+                                    lastPositionData.frame = static_cast<int64_t> ((reinterpret_cast<LV2_Atom_Float*> (frame))->body);
                                 else if (frame->type == uridAtomInt)
                                     lastPositionData.frame = (reinterpret_cast<LV2_Atom_Int*> (frame))->body;
                                 else if (frame->type == uridAtomLong)
@@ -1308,7 +1308,7 @@ public:
 
                             if (lastPositionData.bar >= 0 && lastPositionData.beatsPerBar > 0.0f)
                             {
-                                curPosInfo.ppqPositionOfLastBarStart = (float) lastPositionData.bar * lastPositionData.beatsPerBar;
+                                curPosInfo.ppqPositionOfLastBarStart = static_cast<float> (lastPositionData.bar) * lastPositionData.beatsPerBar;
 
                                 if (lastPositionData.barBeat >= 0.0f)
                                     curPosInfo.ppqPosition = curPosInfo.ppqPositionOfLastBarStart + lastPositionData.barBeat;
@@ -1323,7 +1323,7 @@ public:
                 }
 #endif
                 {
-                    AudioSampleBuffer chans (channels, jmax (numInChans, numOutChans), (int) sampleCount);
+                    AudioSampleBuffer chans (channels, jmax (numInChans, numOutChans), static_cast<int> (sampleCount));
                     filter->processBlock (chans, midiEvents);
                 }
             }
@@ -1358,15 +1358,15 @@ public:
 
                 if (lastPositionData.bar >= 0 && lastPositionData.barBeat >= 0.0f)
                 {
-                    lastPositionData.bar    += (int64_t) std::floor ((lastPositionData.barBeat+addedBarBeats)/
-                                                           lastPositionData.beatsPerBar);
-                    lastPositionData.barBeat = (float) std::fmod (lastPositionData.barBeat+addedBarBeats,
-                                                         lastPositionData.beatsPerBar);
+                    lastPositionData.bar    += static_cast<int64_t> (std::floor ((lastPositionData.barBeat + addedBarBeats)
+                                                         / lastPositionData.beatsPerBar));
+                    lastPositionData.barBeat = static_cast<float> (std::fmod (lastPositionData.barBeat + addedBarBeats,
+                                                         lastPositionData.beatsPerBar));
 
                     if (lastPositionData.bar < 0)
                         lastPositionData.bar = 0;
 
-                    curPosInfo.ppqPositionOfLastBarStart = (float) lastPositionData.bar * lastPositionData.beatsPerBar;
+                    curPosInfo.ppqPositionOfLastBarStart = static_cast<float> (lastPositionData.bar) * lastPositionData.beatsPerBar;
                     curPosInfo.ppqPosition = curPosInfo.ppqPositionOfLastBarStart + lastPositionData.barBeat;
                 }
 
@@ -1396,7 +1396,7 @@ public:
 
                 while (i.getNextEvent (midiEventData, midiEventSize, midiEventPosition))
                 {
-                    jassert (midiEventPosition >= 0 && midiEventPosition < (int) sampleCount);
+                    jassert (midiEventPosition >= 0 && midiEventPosition < static_cast<int> (sampleCount));
 
                     if (sizeof (LV2_Atom_Event) + midiEventSize > capacity - offset)
                         break;
@@ -1473,11 +1473,11 @@ public:
             progDesc.name = nullptr;
         }
 
-        if ((int) index < filter->getNumPrograms())
+        if (static_cast<int> (index) < filter->getNumPrograms())
         {
             progDesc.bank    = index / 128;
             progDesc.program = index % 128;
-            progDesc.name    = strdup (filter->getProgramName ((int) index).toUTF8());
+            progDesc.name    = strdup (filter->getProgramName (static_cast<int> (index)).toUTF8());
             return &progDesc;
         }
 
@@ -1488,7 +1488,7 @@ public:
     {
         jassert (filter != nullptr);
 
-        int realProgram = (int) (bank * 128 + program);
+        int realProgram = static_cast<int> (bank * 128 + program);
 
         if (realProgram < filter->getNumPrograms())
         {
