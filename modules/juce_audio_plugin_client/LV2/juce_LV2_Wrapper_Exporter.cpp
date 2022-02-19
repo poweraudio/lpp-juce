@@ -50,9 +50,9 @@ static const String nameToSymbol (const String& name, const uint32 portIndex)
         for (int i = 0; i < trimmedName.length(); ++i)
         {
             const juce_wchar c = trimmedName[i];
-            if (i == 0 && std::isdigit (c))
+            if (i == 0 && std::isdigit (static_cast<int> (c)))
                 symbol += "_";
-            else if (std::isalpha (c) || std::isdigit (c))
+            else if (std::isalpha (static_cast<int> (c)) || std::isdigit (static_cast<int> (c)))
                 symbol += c;
             else
                 symbol += "_";

@@ -1169,7 +1169,7 @@ public:
                         if (event->body.type == uridMidiEvent)
                         {
                             const uint8* data = (const uint8*) (event + 1);
-                            midiEvents.addEvent (data, event->body.size, static_cast<int> (event->time.frames));
+                            midiEvents.addEvent (data, static_cast<int> (event->body.size), static_cast<int> (event->time.frames));
                             continue;
                         }
  #endif
