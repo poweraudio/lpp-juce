@@ -978,7 +978,7 @@ public:
         progDesc.name = nullptr;
     }
 
-    ~JuceLv2Wrapper ()
+    ~JuceLv2Wrapper()
     {
         const MessageManagerLock mmLock;
 
@@ -1405,7 +1405,7 @@ public:
                     aev->time.frames = midiEventPosition;
                     aev->body.type   = uridMidiEvent;
                     aev->body.size   = midiEventSize;
-                    memcpy (LV2_ATOM_BODY (&aev->body), midiEventData, midiEventSize);
+                    std::memcpy (LV2_ATOM_BODY (&aev->body), midiEventData, midiEventSize);
 
                     size    = lv2_atom_pad_size (sizeof (LV2_Atom_Event) + midiEventSize);
                     offset += size;
@@ -1720,7 +1720,7 @@ static void juceLV2_Activate (LV2_Handle handle)
     handlePtr->lv2Activate();
 }
 
-static void juceLV2_Run ( LV2_Handle handle, uint32 sampleCount)
+static void juceLV2_Run (LV2_Handle handle, uint32 sampleCount)
 {
     handlePtr->lv2Run (sampleCount);
 }
@@ -1908,13 +1908,13 @@ static const struct DescriptorCleanup {
 //==============================================================================
 // startup code..
 
-JUCE_EXPORTED_FUNCTION const LV2_Descriptor* lv2_descriptor (uint32 index)
+LV2_SYMBOL_EXPORT const LV2_Descriptor* lv2_descriptor (uint32 index)
 {
     return (index == 0) ? &JuceLv2Plugin : nullptr;
 }
 
 #if ! JUCE_AUDIOPROCESSOR_NO_GUI
-JUCE_EXPORTED_FUNCTION const LV2UI_Descriptor* lv2ui_descriptor (uint32 index)
+LV2_SYMBOL_EXPORT const LV2UI_Descriptor* lv2ui_descriptor (uint32 index)
 {
     switch (index)
     {

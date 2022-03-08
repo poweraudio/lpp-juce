@@ -43,7 +43,7 @@ static const String nameToSymbol (const String& name, const uint32 portIndex)
     if (trimmedName.isEmpty())
     {
         symbol += "lv2_port_";
-        symbol += String (portIndex+1);
+        symbol += String (portIndex + 1);
     }
     else
     {
@@ -145,7 +145,7 @@ static const String makeManifestFile (AudioProcessor* const filter, const String
     // Presets
     for (int i = 0; i < filter->getNumPrograms(); ++i)
     {
-        text += "<" + pluginURI + presetSeparator + "preset" + String::formatted ("%03i", i+1) + ">\n";
+        text += "<" + pluginURI + presetSeparator + "preset" + String::formatted ("%03i", i + 1) + ">\n";
         text += "    a pset:Preset ;\n";
         text += "    lv2:appliesTo <" + pluginURI + "> ;\n";
         text += "    rdfs:label \"" + filter->getProgramName (i) + "\" ;\n";
@@ -290,10 +290,10 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
 
         text += "        a lv2:InputPort, lv2:AudioPort ;\n";
         text += "        lv2:index " + String (portIndex++) + " ;\n";
-        text += "        lv2:symbol \"lv2_audio_in_" + String (i+1) + "\" ;\n";
-        text += "        lv2:name \"Audio Input " + String (i+1) + "\" ;\n";
+        text += "        lv2:symbol \"lv2_audio_in_" + String (i + 1) + "\" ;\n";
+        text += "        lv2:name \"Audio Input " + String (i + 1) + "\" ;\n";
 
-        if (i+1 == maxNumInputChannels)
+        if (i + 1 == maxNumInputChannels)
             text += "    ] ;\n\n";
         else
             text += "    ] ,\n";
@@ -309,10 +309,10 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
 
         text += "        a lv2:OutputPort, lv2:AudioPort ;\n";
         text += "        lv2:index " + String (portIndex++) + " ;\n";
-        text += "        lv2:symbol \"lv2_audio_out_" + String (i+1) + "\" ;\n";
-        text += "        lv2:name \"Audio Output " + String (i+1) + "\" ;\n";
+        text += "        lv2:symbol \"lv2_audio_out_" + String (i + 1) + "\" ;\n";
+        text += "        lv2:name \"Audio Output " + String (i + 1) + "\" ;\n";
 
-        if (i+1 == maxNumOutputChannels)
+        if (i + 1 == maxNumOutputChannels)
             text += "    ] ;\n\n";
         else
             text += "    ] ,\n";
@@ -336,7 +336,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
         if (paramName.isNotEmpty())
             text += "        lv2:name \"" + paramName + "\" ;\n";
         else
-            text += "        lv2:name \"Port " + String (i+1) + "\" ;\n";
+            text += "        lv2:name \"Port " + String (i + 1) + "\" ;\n";
 
         text += "        lv2:default " + String::formatted ("%f", safeParamValue (parameters[i]->getValue())) + " ;\n";
         text += "        lv2:minimum 0.0 ;\n";
@@ -345,7 +345,7 @@ static const String makePluginFile (AudioProcessor* const filter, const int maxN
         if (! parameters[i]->isAutomatable())
             text += "        lv2:portProperty <" LV2_PORT_PROPS__expensive "> ;\n";
 
-        if (i+1 == parameters.size())
+        if (i + 1 == parameters.size())
             text += "    ] ;\n\n";
         else
             text += "    ] ,\n";
@@ -398,14 +398,14 @@ static const String makePresetsFile (AudioProcessor* const filter)
 
     for (int i = 0; i < numPrograms; ++i)
     {
-        std::cout << "\nSaving preset " << i+1 << "/" << numPrograms+1 << "...";
+        std::cout << "\nSaving preset " << i + 1 << "/" << numPrograms + 1 << "...";
         std::cout.flush();
 
         String preset;
 
         // Label
         filter->setCurrentProgram (i);
-        preset += "<" + pluginURI + presetSeparator + "preset" + String::formatted ("%03i", i+1) + "> a pset:Preset ;\n";
+        preset += "<" + pluginURI + presetSeparator + "preset" + String::formatted ("%03i", i + 1) + "> a pset:Preset ;\n";
 
         // State
 #if JucePlugin_WantsLV2State
@@ -448,7 +448,7 @@ static const String makePresetsFile (AudioProcessor* const filter)
             preset += "        lv2:symbol \"" + nameToSymbol (parameters[j]->getName (1024), static_cast<unsigned int> (j)) + "\" ;\n";
             preset += "        pset:value " + String::formatted ("%f", safeParamValue (parameters[j]->getValue())) + " ;\n";
 
-            if (j+1 == filter->getParameters().size())
+            if (j + 1 == filter->getParameters().size())
                 preset += "    ] ";
             else
                 preset += "    ] ,\n";
